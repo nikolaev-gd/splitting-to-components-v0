@@ -5,13 +5,13 @@
 
 import React, { useState } from 'react'
 import FlashcardDialog from './FlashcardDialog'
-import { Flashcard } from '@/lib/types'
+import { Flashcard as FlashcardType } from '@/lib/types'
 
 // This defines what information our InteractiveText component needs to work
 interface InteractiveTextProps {
   text: string                              // The text to make interactive
   onWordClick: (word: string) => void       // Function to call when a word is clicked
-  onSaveFlashcard: (flashcard: Flashcard) => void  // Function to call when a flashcard is saved
+  onSaveFlashcard: (flashcard: FlashcardType) => void  // Function to call when a flashcard is saved
 }
 
 // This is our main InteractiveText component

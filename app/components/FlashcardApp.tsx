@@ -1,56 +1,54 @@
-// This is the main component of our flashcard learning application.
-// It manages the overall state and flow of the app, including:
-// - Displaying and interacting with text
-// - Creating and managing flashcards
-// - Providing a study mode for reviewing flashcards
-// - Offering additional learning options
-// This component brings together all the other parts of the app to create a complete learning experience.
+// FlashcardApp.tsx
 
-"use client"
+// This is the main component of our flashcard learning application.
+// It manages the overall state and flow of the app, including text input,
+// flashcard creation, study mode, and additional learning options.
+
+"use client";
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
-import InteractiveText from './InteractiveText'
+import TextDisplay from './TextDisplay'
 import Flashcard from './Flashcard'
 import FlashcardView from './FlashcardView'
 import ContinueLearning from './ContinueLearning'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Flashcard as FlashcardType } from '@/lib/types'
 import { shuffleArray } from '@/lib/utils'
 
 export default function FlashcardApp() {
-  // State variables to manage different aspects of the app
-  const [simplified, setSimplified] = useState<string[]>([])  // Simplified version of the text
-  const [showSimplified, setShowSimplified] = useState(false)  // Whether to show simplified text
-  const [savedFlashcards, setSavedFlashcards] = useState<FlashcardType[]>([])  // User's saved flashcards
-  const [showOriginal, setShowOriginal] = useState(true)  // Whether to show original text
-  const [showFlashcards, setShowFlashcards] = useState(false)  // Whether to show flashcard study mode
-  const [showContinueLearning, setShowContinueLearning] = useState(false)  // Whether to show continue learning screen
-  const [shuffledFlashcards, setShuffledFlashcards] = useState<FlashcardType[]>([])  // Shuffled flashcards for study
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)  // Current flashcard index in study mode
-  const [isFlipped, setIsFlipped] = useState(false)  // Whether the current flashcard is flipped
-  const [isFinished, setIsFinished] = useState(false)  // Whether the study session is finished
-  const [reviewMode, setReviewMode] = useState<'all' | 'starred'>('all')  // Current review mode
+  // State variables
+  const [simplified, setSimplified] = useState<string[]>([])
+  const [showSimplified, setShowSimplified] = useState(false)
+  const [savedFlashcards, setSavedFlashcards] = useState<FlashcardType[]>([])
+  const [showOriginal, setShowOriginal] = useState(true)
+  const [showFlashcards, setShowFlashcards] = useState(false)
+  const [showContinueLearning, setShowContinueLearning] = useState(false)
+  const [shuffledFlashcards, setShuffledFlashcards] = useState<FlashcardType[]>([])
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const [isFlipped, setIsFlipped] = useState(false)
+  const [isFinished, setIsFinished] = useState(false)
+  const [reviewMode, setReviewMode] = useState<'all' | 'starred'>('all')
 
-    // Function to move to the next flashcard
-    const nextCard = useCallback(() => {
-      if (currentCardIndex < shuffledFlashcards.length - 1) {
-        setCurrentCardIndex(currentCardIndex + 1)
-        setIsFlipped(false)
-      } else {
-        setIsFinished(true)
-      }
-    }, [currentCardIndex, shuffledFlashcards.length])
-  
-    // Function to move to the previous flashcard
-    const previousCard = useCallback(() => {
-      if (currentCardIndex > 0) {
-        setCurrentCardIndex(currentCardIndex - 1)
-        setIsFlipped(false)
-      }
-    }, [currentCardIndex])
-  
+  // Function to move to the next flashcard
+  const nextCard = useCallback(() => {
+    if (currentCardIndex < shuffledFlashcards.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1)
+      setIsFlipped(false)
+    } else {
+      setIsFinished(true)
+    }
+  }, [currentCardIndex, shuffledFlashcards.length])
+
+  // Function to move to the previous flashcard
+  const previousCard = useCallback(() => {
+    if (currentCardIndex > 0) {
+      setCurrentCardIndex(currentCardIndex - 1)
+      setIsFlipped(false)
+    }
+  }, [currentCardIndex])
+
+  // Effect for keyboard navigation in flashcard mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showFlashcards) {
@@ -61,7 +59,7 @@ export default function FlashcardApp() {
         }
       }
     }
-  
+
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [showFlashcards, nextCard, previousCard])
@@ -136,78 +134,18 @@ export default function FlashcardApp() {
     }
   }
 
-  // The main render function, returning the UI of the app
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-grow overflow-auto p-4">
-        {/* Render buttons for simplifying text and toggling original/simplified view */}
-        {simplified.length > 0 && (
-          <div className="mb-4 flex justify-between items-center">
-            <h2 className="text-xl font-bold">Title from ChatGPT</h2>
-            {!showSimplified ? (
-              <Button onClick={handleSimplify}>Simplify Text</Button>
-            ) : (
-              <Button 
-                onClick={toggleOriginalText} 
-                aria-expanded={showOriginal}
-                aria-controls="original-text"
-              >
-                {showOriginal ? 'Hide Original Text' : 'Show Original Text'}
-              </Button>
-            )}
-          </div>
-        )}
+        <TextDisplay
+          simplified={simplified}
+          showSimplified={showSimplified}
+          showOriginal={showOriginal}
+          onSimplify={handleSimplify}
+          onToggleOriginal={toggleOriginalText}
+          onSaveFlashcard={handleSaveFlashcard}
+        />
 
-        <div className="relative">
-          {/* Render original text with animation */}
-          <AnimatePresence>
-            {showOriginal && simplified.length > 0 && (
-              <motion.div
-                initial={{ height: 'auto', opacity: 1 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="overflow-hidden"
-              >
-                <div className="border p-4 mb-4">
-                  {simplified.map((paragraph, index) => (
-                    <p key={index} className="mb-4 last:mb-0">
-                      <InteractiveText 
-                        text={paragraph} 
-                        onWordClick={() => {}}
-                        onSaveFlashcard={handleSaveFlashcard}
-                      />
-                    </p>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Render simplified text with animation */}
-          {showSimplified && simplified.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="border p-4 mb-4">
-                <h2 className="text-xl font-bold mb-2">Simplified Text</h2>
-                {simplified.map((paragraph, index) => (
-                  <p key={index} className="mb-4 last:mb-0">
-                    <InteractiveText 
-                      text={paragraph} 
-                      onWordClick={() => {}}
-                      onSaveFlashcard={handleSaveFlashcard}
-                    />
-                  </p>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Render saved flashcards and study button */}
         {savedFlashcards.length > 0 && (
           <div className="mt-4">
             <Button 
@@ -233,10 +171,8 @@ export default function FlashcardApp() {
         )}
       </div>
 
-      {/* Render text input component */}
       <TextInput onSubmit={handleTextSubmit} />
 
-      {/* Render flashcard study view when active */}
       {showFlashcards && (
         <FlashcardView
           shuffledFlashcards={shuffledFlashcards}
@@ -255,7 +191,6 @@ export default function FlashcardApp() {
         />
       )}
 
-      {/* Render continue learning screen when active */}
       {showContinueLearning && (
         <ContinueLearning onClose={() => setShowContinueLearning(false)} />
       )}
