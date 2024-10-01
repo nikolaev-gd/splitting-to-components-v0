@@ -1,16 +1,26 @@
+// This component creates a text input area for users to type messages or content.
+// It's designed to automatically expand as the user types more text and includes
+// a submit button. It's typically used for entering text that will be processed
+// or displayed elsewhere in the application, like submitting a message or query.
+
 import React, { useState, useRef, useEffect } from 'react'
 import { Textarea } from "./ui/textarea"
 import { Button } from "./ui/button"
 import { ArrowUp } from 'lucide-react'
 
+// Define the props that this component accepts
 interface TextInputProps {
-  onSubmit: (text: string) => void
+  onSubmit: (text: string) => void  // Function to call when text is submitted
 }
 
 export default function TextInput({ onSubmit }: TextInputProps) {
+  // State to hold the current text in the input
   const [text, setText] = useState('')
+  
+  // Reference to the textarea DOM element
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+  // Effect to adjust the height of the textarea as content changes
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
@@ -18,14 +28,16 @@ export default function TextInput({ onSubmit }: TextInputProps) {
     }
   }, [text])
 
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (text.trim() !== '') {
-      onSubmit(text)
-      setText('')
+      onSubmit(text)  // Call the provided onSubmit function with the text
+      setText('')     // Clear the input after submission
     }
   }
 
+  // Handle keydown events (for submitting with Enter key)
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()

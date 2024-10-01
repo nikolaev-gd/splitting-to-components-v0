@@ -5,7 +5,7 @@
 // an unfamiliar word while reading.
 
 import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Flashcard } from '@/lib/types'
 import Image from 'next/image'
@@ -50,6 +50,9 @@ export default function FlashcardDialog({ word, onSave, children, isOpen, onOpen
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>{word}</DialogTitle>
+          <DialogDescription>
+            Information about the word &ldquo;{word}&rdquo; and options to save it as a flashcard.
+          </DialogDescription>
         </DialogHeader>
         {/* This creates a two-column layout on larger screens */}
         <div className="flex flex-col md:flex-row">

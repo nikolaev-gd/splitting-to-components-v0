@@ -1,3 +1,11 @@
+// This is the main component of our flashcard learning application.
+// It manages the overall state and flow of the app, including:
+// - Displaying and interacting with text
+// - Creating and managing flashcards
+// - Providing a study mode for reviewing flashcards
+// - Offering additional learning options
+// This component brings together all the other parts of the app to create a complete learning experience.
+
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
@@ -12,23 +20,37 @@ import { Flashcard as FlashcardType } from '@/lib/types'
 import { shuffleArray } from '@/lib/utils'
 
 export default function FlashcardApp() {
-  const [text, setText] = useState('')
-  const [simplified, setSimplified] = useState<string[]>([])
-  const [showSimplified, setShowSimplified] = useState(false)
-  const [selectedWord, setSelectedWord] = useState('')
-  const [savedFlashcards, setSavedFlashcards] = useState<FlashcardType[]>([])
-  const [currentFolder, setCurrentFolder] = useState('')
-  const [showOriginal, setShowOriginal] = useState(true)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [flashcardToDelete, setFlashcardToDelete] = useState<string | null>(null)
-  const [showFlashcards, setShowFlashcards] = useState(false)
-  const [showContinueLearning, setShowContinueLearning] = useState(false)
-  const [shuffledFlashcards, setShuffledFlashcards] = useState<FlashcardType[]>([])
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [isFlipped, setIsFlipped] = useState(false)
-  const [isFinished, setIsFinished] = useState(false)
-  const [reviewMode, setReviewMode] = useState<'all' | 'starred'>('all')
+  // State variables to manage different aspects of the app
+  const [simplified, setSimplified] = useState<string[]>([])  // Simplified version of the text
+  const [showSimplified, setShowSimplified] = useState(false)  // Whether to show simplified text
+  const [savedFlashcards, setSavedFlashcards] = useState<FlashcardType[]>([])  // User's saved flashcards
+  const [showOriginal, setShowOriginal] = useState(true)  // Whether to show original text
+  const [showFlashcards, setShowFlashcards] = useState(false)  // Whether to show flashcard study mode
+  const [showContinueLearning, setShowContinueLearning] = useState(false)  // Whether to show continue learning screen
+  const [shuffledFlashcards, setShuffledFlashcards] = useState<FlashcardType[]>([])  // Shuffled flashcards for study
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)  // Current flashcard index in study mode
+  const [isFlipped, setIsFlipped] = useState(false)  // Whether the current flashcard is flipped
+  const [isFinished, setIsFinished] = useState(false)  // Whether the study session is finished
+  const [reviewMode, setReviewMode] = useState<'all' | 'starred'>('all')  // Current review mode
 
+    // Function to move to the next flashcard
+    const nextCard = useCallback(() => {
+      if (currentCardIndex < shuffledFlashcards.length - 1) {
+        setCurrentCardIndex(currentCardIndex + 1)
+        setIsFlipped(false)
+      } else {
+        setIsFinished(true)
+      }
+    }, [currentCardIndex, shuffledFlashcards.length])
+  
+    // Function to move to the previous flashcard
+    const previousCard = useCallback(() => {
+      if (currentCardIndex > 0) {
+        setCurrentCardIndex(currentCardIndex - 1)
+        setIsFlipped(false)
+      }
+    }, [currentCardIndex])
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showFlashcards) {
@@ -39,52 +61,51 @@ export default function FlashcardApp() {
         }
       }
     }
-
+  
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [showFlashcards, currentCardIndex])
+  }, [showFlashcards, nextCard, previousCard])
 
+  // Function to handle text submission
   const handleTextSubmit = (submittedText: string) => {
     if (submittedText.trim() !== '') {
       setSimplified(submittedText.split('\n').filter(paragraph => paragraph.trim() !== ''))
-      const firstFourWords = submittedText.split(' ').slice(0, 4).join(' ')
-      setCurrentFolder(firstFourWords)
-      setText('')
     }
   }
 
+  // Function to handle text simplification
   const handleSimplify = () => {
     setShowSimplified(true)
     setShowOriginal(false)
   }
 
-  const handleWordClick = (word: string) => {
-    setSelectedWord(word)
-    setDialogOpen(true)
-  }
-
+  // Function to handle saving a new flashcard
   const handleSaveFlashcard = (flashcard: FlashcardType) => {
     setSavedFlashcards([...savedFlashcards, flashcard])
-    setDialogOpen(false)
   }
 
+  // Function to handle deleting a flashcard
   const handleDeleteFlashcard = (id: string) => {
     setSavedFlashcards(savedFlashcards.filter(flashcard => flashcard.id !== id))
   }
 
+  // Function to toggle between original and simplified text
   const toggleOriginalText = () => {
     setShowOriginal(!showOriginal)
   }
 
+  // Function to update flashcards (e.g., when starring/unstarring)
   const handleUpdateFlashcards = (updatedFlashcards: FlashcardType[]) => {
     setSavedFlashcards(updatedFlashcards)
   }
 
+  // Function to show the continue learning screen
   const handleContinueLearning = () => {
     setShowContinueLearning(true)
     setShowFlashcards(false)
   }
 
+  // Function to reshuffle flashcards for study
   const reshuffleFlashcards = useCallback((cards: FlashcardType[]) => {
     setShuffledFlashcards(shuffleArray(cards))
     setCurrentCardIndex(0)
@@ -92,22 +113,7 @@ export default function FlashcardApp() {
     setIsFinished(false)
   }, [])
 
-  const nextCard = () => {
-    if (currentCardIndex < shuffledFlashcards.length - 1) {
-      setCurrentCardIndex(currentCardIndex + 1)
-      setIsFlipped(false)
-    } else {
-      setIsFinished(true)
-    }
-  }
-
-  const previousCard = () => {
-    if (currentCardIndex > 0) {
-      setCurrentCardIndex(currentCardIndex - 1)
-      setIsFlipped(false)
-    }
-  }
-
+  // Function to handle starring/unstarring a flashcard
   const handleStarClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     const updatedFlashcards = [...shuffledFlashcards]
@@ -119,6 +125,7 @@ export default function FlashcardApp() {
     handleUpdateFlashcards(updatedFlashcards)
   }
 
+  // Function to start reviewing tough (starred) terms
   const handleReviewToughTerms = () => {
     const starredCards = shuffledFlashcards.filter(card => card.isStarred)
     if (starredCards.length > 0) {
@@ -129,9 +136,11 @@ export default function FlashcardApp() {
     }
   }
 
+  // The main render function, returning the UI of the app
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-grow overflow-auto p-4">
+        {/* Render buttons for simplifying text and toggling original/simplified view */}
         {simplified.length > 0 && (
           <div className="mb-4 flex justify-between items-center">
             <h2 className="text-xl font-bold">Title from ChatGPT</h2>
@@ -150,6 +159,7 @@ export default function FlashcardApp() {
         )}
 
         <div className="relative">
+          {/* Render original text with animation */}
           <AnimatePresence>
             {showOriginal && simplified.length > 0 && (
               <motion.div
@@ -160,13 +170,13 @@ export default function FlashcardApp() {
                 className="overflow-hidden"
               >
                 <div className="border p-4 mb-4">
-                {simplified.map((paragraph, index) => (
+                  {simplified.map((paragraph, index) => (
                     <p key={index} className="mb-4 last:mb-0">
-                        <InteractiveText 
+                      <InteractiveText 
                         text={paragraph} 
-                        onWordClick={handleWordClick}
+                        onWordClick={() => {}}
                         onSaveFlashcard={handleSaveFlashcard}
-                        />
+                      />
                     </p>
                   ))}
                 </div>
@@ -174,6 +184,7 @@ export default function FlashcardApp() {
             )}
           </AnimatePresence>
 
+          {/* Render simplified text with animation */}
           {showSimplified && simplified.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -183,19 +194,20 @@ export default function FlashcardApp() {
               <div className="border p-4 mb-4">
                 <h2 className="text-xl font-bold mb-2">Simplified Text</h2>
                 {simplified.map((paragraph, index) => (
-                    <p key={index} className="mb-4 last:mb-0">
-                        <InteractiveText 
-                        text={paragraph} 
-                        onWordClick={handleWordClick}
-                        onSaveFlashcard={handleSaveFlashcard}
-                        />
-                    </p>
-                    ))}
+                  <p key={index} className="mb-4 last:mb-0">
+                    <InteractiveText 
+                      text={paragraph} 
+                      onWordClick={() => {}}
+                      onSaveFlashcard={handleSaveFlashcard}
+                    />
+                  </p>
+                ))}
               </div>
             </motion.div>
           )}
         </div>
 
+        {/* Render saved flashcards and study button */}
         {savedFlashcards.length > 0 && (
           <div className="mt-4">
             <Button 
@@ -221,8 +233,10 @@ export default function FlashcardApp() {
         )}
       </div>
 
+      {/* Render text input component */}
       <TextInput onSubmit={handleTextSubmit} />
 
+      {/* Render flashcard study view when active */}
       {showFlashcards && (
         <FlashcardView
           shuffledFlashcards={shuffledFlashcards}
@@ -241,6 +255,7 @@ export default function FlashcardApp() {
         />
       )}
 
+      {/* Render continue learning screen when active */}
       {showContinueLearning && (
         <ContinueLearning onClose={() => setShowContinueLearning(false)} />
       )}

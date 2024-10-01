@@ -1,17 +1,26 @@
+// This file creates a customizable alert dialog component for our application.
+// An alert dialog is a pop-up window that appears to inform the user about
+// important information or ask for confirmation before performing an action.
+// It's like a more attention-grabbing version of a regular dialog box.
+
 import * as React from "react"
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
+// Create the main AlertDialog component
 const AlertDialog = AlertDialogPrimitive.Root
 
+// Create the trigger component that opens the dialog
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 
+// Create the portal component that renders the dialog outside the current DOM hierarchy
 const AlertDialogPortal = AlertDialogPrimitive.Portal
 
 AlertDialogPortal.displayName = AlertDialogPrimitive.Portal.displayName
 
+// Create the overlay component that dims the background when the dialog is open
 const AlertDialogOverlay = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
@@ -27,6 +36,7 @@ const AlertDialogOverlay = React.forwardRef<
 ))
 AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName
 
+// Create the main content component of the alert dialog
 const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
@@ -45,6 +55,7 @@ const AlertDialogContent = React.forwardRef<
 ))
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
+// Create a header component for the alert dialog
 const AlertDialogHeader = ({
   className,
   ...props
@@ -59,6 +70,7 @@ const AlertDialogHeader = ({
 )
 AlertDialogHeader.displayName = "AlertDialogHeader"
 
+// Create a footer component for the alert dialog
 const AlertDialogFooter = ({
   className,
   ...props
@@ -73,6 +85,7 @@ const AlertDialogFooter = ({
 )
 AlertDialogFooter.displayName = "AlertDialogFooter"
 
+// Create a title component for the alert dialog
 const AlertDialogTitle = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Title>
@@ -85,6 +98,7 @@ const AlertDialogTitle = React.forwardRef<
 ))
 AlertDialogTitle.displayName = AlertDialogPrimitive.Title.displayName
 
+// Create a description component for the alert dialog
 const AlertDialogDescription = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Description>
@@ -97,6 +111,7 @@ const AlertDialogDescription = React.forwardRef<
 ))
 AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName
 
+// Create an action button component for the alert dialog
 const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
@@ -109,6 +124,7 @@ const AlertDialogAction = React.forwardRef<
 ))
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName
 
+// Create a cancel button component for the alert dialog
 const AlertDialogCancel = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
@@ -125,6 +141,7 @@ const AlertDialogCancel = React.forwardRef<
 ))
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName
 
+// Export all the components so they can be used in other parts of the application
 export {
   AlertDialog,
   AlertDialogTrigger,
