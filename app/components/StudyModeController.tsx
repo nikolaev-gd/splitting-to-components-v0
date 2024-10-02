@@ -79,6 +79,7 @@ export default function StudyModeController({
               size="icon"
               className={`absolute top-2 right-2 z-10 ${current.isStarred ? 'text-yellow-500' : 'text-gray-400'}`}
               onClick={onStar}
+              data-id={current.id}
             >
               <Star className="h-6 w-6" fill={current.isStarred ? 'currentColor' : 'none'} />
               <span className="sr-only">Star card</span>
