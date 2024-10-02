@@ -10,11 +10,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
 import TextDisplay from './TextDisplay'
-import Flashcard from './Flashcard'
+import FlashcardList from './FlashcardList'
 import FlashcardView from './FlashcardView'
 import ContinueLearning from './ContinueLearning'
 import { Flashcard as FlashcardType } from '@/lib/types'
 import { shuffleArray } from '@/lib/utils'
+
 
 export default function FlashcardApp() {
   // State variables
@@ -158,15 +159,10 @@ export default function FlashcardApp() {
             >
               Learn Saved Flashcards
             </Button>
-            <div className="mt-4 space-y-6">
-              {savedFlashcards.map((flashcard) => (
-                <Flashcard 
-                  key={flashcard.id}
-                  flashcard={flashcard}
-                  onDelete={() => handleDeleteFlashcard(flashcard.id)}
-                />
-              ))}
-            </div>
+            <FlashcardList 
+              flashcards={savedFlashcards}
+              onDelete={handleDeleteFlashcard}
+            />
           </div>
         )}
       </div>
