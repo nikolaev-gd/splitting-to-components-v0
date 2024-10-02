@@ -44,7 +44,7 @@ export default function StudyModeController({
     if (isFinished) {
       return (
         <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-bold mb-4">You've completed all flashcards!</h2>
+          <h2 className="text-2xl font-bold mb-4">You&apos;ve completed all flashcards!</h2>
           <div className="flex flex-col space-y-4 w-64">
             <Button onClick={onRestart} className="w-full">Restart Flashcards</Button>
             <Button onClick={onReviewToughTerms} className="w-full">Review the Tough Terms</Button>

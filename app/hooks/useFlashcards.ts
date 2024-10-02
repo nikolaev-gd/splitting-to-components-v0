@@ -87,7 +87,6 @@ export function useFlashcards() {
     nextCard,
     previousCard,
     flipCard,
-    starCard,
     reviewToughTerms,
     handleStarClick,
   };

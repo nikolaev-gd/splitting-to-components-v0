@@ -2,6 +2,8 @@
 
 "use client";
 
+// app/components/FlashcardApp.tsx
+
 import React, { useState } from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
@@ -10,14 +12,9 @@ import FlashcardList from './FlashcardList'
 import StudyModeController from './StudyModeController'
 import ContinueLearning from './ContinueLearning'
 import { useFlashcards } from '../hooks/useFlashcards'
+import { useTextDisplay } from '../hooks/useTextDisplay' // Import the new hook
 
 export default function FlashcardApp() {
-  const [simplified, setSimplified] = useState<string[]>([])
-  const [showSimplified, setShowSimplified] = useState(false)
-  const [showOriginal, setShowOriginal] = useState(true)
-  const [showFlashcards, setShowFlashcards] = useState(false)
-  const [showContinueLearning, setShowContinueLearning] = useState(false)
-
   const {
     savedFlashcards,
     shuffledFlashcards,
@@ -31,25 +28,22 @@ export default function FlashcardApp() {
     nextCard,
     previousCard,
     flipCard,
-    starCard,
     reviewToughTerms,
     handleStarClick,
   } = useFlashcards();
 
-  const handleTextSubmit = (submittedText: string) => {
-    if (submittedText.trim() !== '') {
-      setSimplified(submittedText.split('\n').filter(paragraph => paragraph.trim() !== ''))
-    }
-  }
+  // Use the new useTextDisplay hook
+  const {
+    simplified,
+    showSimplified,
+    showOriginal,
+    handleTextSubmit,
+    handleSimplify,
+    toggleOriginalText,
+  } = useTextDisplay();
 
-  const handleSimplify = () => {
-    setShowSimplified(true)
-    setShowOriginal(false)
-  }
-
-  const toggleOriginalText = () => {
-    setShowOriginal(!showOriginal)
-  }
+  const [showFlashcards, setShowFlashcards] = useState(false)
+  const [showContinueLearning, setShowContinueLearning] = useState(false)
 
   const handleContinueLearning = () => {
     setShowContinueLearning(true)
