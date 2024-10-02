@@ -7,14 +7,15 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Trash2, Star } from 'lucide-react'
 import { Flashcard as FlashcardType } from '@/lib/types'
 import Image from 'next/image';
+import { useFlashcardContext } from '../contexts/FlashcardContext';
 
 interface FlashcardProps {
   flashcard: FlashcardType
-  onDelete: () => void
-  onStar: () => void
 }
 
-export default function Flashcard({ flashcard, onDelete, onStar }: FlashcardProps) {
+export default function Flashcard({ flashcard }: FlashcardProps) {
+  const { deleteFlashcard, starCard } = useFlashcardContext();
+
   return (
     <Card className="mb-6 relative">
       <AlertDialog>
@@ -37,7 +38,7 @@ export default function Flashcard({ flashcard, onDelete, onStar }: FlashcardProp
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteFlashcard(flashcard.id)}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -48,7 +49,7 @@ export default function Flashcard({ flashcard, onDelete, onStar }: FlashcardProp
         className={`absolute top-2 right-12 ${flashcard.isStarred ? 'text-yellow-500' : 'text-gray-400'}`}
         onClick={(e) => {
           e.stopPropagation();
-          onStar();
+          starCard(flashcard.id);
         }}
       >
         <Star className="h-4 w-4" fill={flashcard.isStarred ? 'currentColor' : 'none'} />

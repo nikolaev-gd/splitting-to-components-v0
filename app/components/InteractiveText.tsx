@@ -3,6 +3,7 @@
 // When a user clicks on a word, it opens a dialog with more information about that word,
 // allowing the user to learn more and potentially save it as a flashcard for later study.
 
+"use client"
 import React, { useState } from 'react'
 import FlashcardDialog from './FlashcardDialog'
 import { Flashcard as FlashcardType } from '@/lib/types'

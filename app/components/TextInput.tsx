@@ -3,6 +3,8 @@
 // a submit button. It's typically used for entering text that will be processed
 // or displayed elsewhere in the application, like submitting a message or query.
 
+"use client"
+
 import React, { useState, useRef, useEffect } from 'react'
 import { Textarea } from "./ui/textarea"
 import { Button } from "./ui/button"

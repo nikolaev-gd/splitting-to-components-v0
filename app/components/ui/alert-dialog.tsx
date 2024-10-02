@@ -18,7 +18,7 @@ const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 // Create the portal component that renders the dialog outside the current DOM hierarchy
 const AlertDialogPortal = AlertDialogPrimitive.Portal
 
-AlertDialogPortal.displayName = AlertDialogPrimitive.Portal.displayName
+// AlertDialogPortal.displayName = AlertDialogPrimitive.Portal.displayName
 
 // Create the overlay component that dims the background when the dialog is open
 const AlertDialogOverlay = React.forwardRef<

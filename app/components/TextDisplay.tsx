@@ -1,10 +1,12 @@
 // app/components/TextDisplay.tsx
 
+"use client"
+
 import React from 'react';
 import { Button } from "./ui/button";
 import InteractiveText from './InteractiveText';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flashcard as FlashcardType } from '@/lib/types'
+import { useFlashcardContext } from '../contexts/FlashcardContext';
 
 interface TextDisplayProps {
   simplified: string[];
@@ -12,7 +14,6 @@ interface TextDisplayProps {
   showOriginal: boolean;
   onSimplify: () => void;
   onToggleOriginal: () => void;
-  onSaveFlashcard: (flashcard: FlashcardType) => void;
 }
 
 const TextDisplay: React.FC<TextDisplayProps> = ({
@@ -21,8 +22,9 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
   showOriginal,
   onSimplify,
   onToggleOriginal,
-  onSaveFlashcard
 }) => {
+  const { saveFlashcard } = useFlashcardContext();
+
   return (
     <div>
       {/* Controls for simplifying and toggling text */}
@@ -59,7 +61,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
                     <InteractiveText 
                       text={paragraph} 
                       onWordClick={() => {}}
-                      onSaveFlashcard={onSaveFlashcard}
+                      onSaveFlashcard={saveFlashcard}
                     />
                   </p>
                 ))}
@@ -82,7 +84,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
                   <InteractiveText 
                     text={paragraph} 
                     onWordClick={() => {}}
-                    onSaveFlashcard={onSaveFlashcard}
+                    onSaveFlashcard={saveFlashcard}
                   />
                 </p>
               ))}

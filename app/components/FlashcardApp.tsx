@@ -1,5 +1,6 @@
-'use client'
+// app/components/FlashcardApp.tsx
 
+"use client"
 import React from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
@@ -7,18 +8,11 @@ import TextDisplay from './TextDisplay'
 import FlashcardList from './FlashcardList'
 import StudyModeController from './StudyModeController'
 import ContinueLearning from './ContinueLearning'
-import { useFlashcards } from '../hooks/useFlashcards'
+import { FlashcardProvider, useFlashcardContext } from '../contexts/FlashcardContext'
 import { useTextDisplay } from '../hooks/useTextDisplay'
 import { useStudyMode } from '../hooks/useStudyMode'
 
 export default function FlashcardApp() {
-  const {
-    savedFlashcards,
-    saveFlashcard,
-    deleteFlashcard,
-    starCard,
-  } = useFlashcards();
-
   const {
     simplified,
     showSimplified,
@@ -28,6 +22,46 @@ export default function FlashcardApp() {
     toggleOriginalText,
   } = useTextDisplay();
 
+  const [showContinueLearning, setShowContinueLearning] = React.useState(false)
+
+  return (
+    <FlashcardProvider>
+      <FlashcardAppContent 
+        simplified={simplified}
+        showSimplified={showSimplified}
+        showOriginal={showOriginal}
+        handleTextSubmit={handleTextSubmit}
+        handleSimplify={handleSimplify}
+        toggleOriginalText={toggleOriginalText}
+        showContinueLearning={showContinueLearning}
+        setShowContinueLearning={setShowContinueLearning}
+      />
+    </FlashcardProvider>
+  )
+}
+
+interface FlashcardAppContentProps {
+  simplified: string[];
+  showSimplified: boolean;
+  showOriginal: boolean;
+  handleTextSubmit: (text: string) => void;
+  handleSimplify: () => void;
+  toggleOriginalText: () => void;
+  showContinueLearning: boolean;
+  setShowContinueLearning: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function FlashcardAppContent({
+  simplified,
+  showSimplified,
+  showOriginal,
+  handleTextSubmit,
+  handleSimplify,
+  toggleOriginalText,
+  showContinueLearning,
+  setShowContinueLearning
+}: FlashcardAppContentProps) {
+  const { savedFlashcards } = useFlashcardContext();
   const {
     isStudyMode,
     shuffledFlashcards,
@@ -43,9 +77,7 @@ export default function FlashcardApp() {
     reviewToughTerms,
     exitStudyMode,
     handleStarClick,
-  } = useStudyMode(savedFlashcards, starCard);
-
-  const [showContinueLearning, setShowContinueLearning] = React.useState(false)
+  } = useStudyMode();
 
   const handleContinueLearning = () => {
     setShowContinueLearning(true)
@@ -61,25 +93,20 @@ export default function FlashcardApp() {
           showOriginal={showOriginal}
           onSimplify={handleSimplify}
           onToggleOriginal={toggleOriginalText}
-          onSaveFlashcard={saveFlashcard}
         />
 
         {savedFlashcards.length > 0 && (
-          <div className="mt-4">
-            <Button 
-              variant="outline" 
-              onClick={startStudyMode}
-              className="mb-4"
-            >
-              Learn Saved Flashcards
-            </Button>
-            <FlashcardList 
-              flashcards={savedFlashcards}
-              onDelete={deleteFlashcard}
-              onStar={starCard}
-            />
-          </div>
+          <Button 
+            variant="outline" 
+            onClick={startStudyMode}
+            className="mt-4 mb-4"
+          >
+            Learn Saved Flashcards
+          </Button>
         )}
+
+        <FlashcardList />
+
       </div>
 
       <TextInput onSubmit={handleTextSubmit} />

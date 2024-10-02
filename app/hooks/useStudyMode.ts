@@ -1,8 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
-import { Flashcard } from '@/lib/types';
-import { shuffleArray } from '@/lib/utils';
+"use client"
 
-export function useStudyMode(savedFlashcards: Flashcard[], starCard: (id: string) => void) {
+import { useState, useCallback, useEffect } from 'react';
+import { shuffleArray } from '@/lib/utils';
+import { useFlashcardContext } from '../contexts/FlashcardContext';
+import { Flashcard } from '@/lib/types';
+
+export function useStudyMode() {
+  const { savedFlashcards, starCard } = useFlashcardContext();
   const [isStudyMode, setIsStudyMode] = useState(false);
   const [shuffledFlashcards, setShuffledFlashcards] = useState<Flashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);

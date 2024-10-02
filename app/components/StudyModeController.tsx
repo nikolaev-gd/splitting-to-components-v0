@@ -54,6 +54,7 @@ export default function StudyModeController({
         </div>
       )
     }
+
   
     const current = flashcards[currentIndex]
   
