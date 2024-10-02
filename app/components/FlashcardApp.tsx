@@ -11,7 +11,7 @@ import { Button } from "./ui/button"
 import TextInput from './TextInput'
 import TextDisplay from './TextDisplay'
 import FlashcardList from './FlashcardList'
-import FlashcardView from './FlashcardView'
+import StudyModeController from './StudyModeController'
 import ContinueLearning from './ContinueLearning'
 import { Flashcard as FlashcardType } from '@/lib/types'
 import { shuffleArray } from '@/lib/utils'
@@ -170,9 +170,9 @@ export default function FlashcardApp() {
       <TextInput onSubmit={handleTextSubmit} />
 
       {showFlashcards && (
-        <FlashcardView
-          shuffledFlashcards={shuffledFlashcards}
-          currentCardIndex={currentCardIndex}
+        <StudyModeController
+          flashcards={shuffledFlashcards}
+          currentIndex={currentCardIndex}
           isFlipped={isFlipped}
           isFinished={isFinished}
           reviewMode={reviewMode}
