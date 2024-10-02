@@ -1,7 +1,4 @@
-// TextDisplay.tsx
-
-// This component is responsible for displaying and toggling between the original and simplified text.
-// It allows users to view the text they're learning and switch between different versions.
+// app/components/TextDisplay.tsx
 
 import React from 'react';
 import { Button } from "./ui/button";

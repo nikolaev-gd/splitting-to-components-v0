@@ -1,10 +1,6 @@
-// app/components/FlashcardApp.tsx
+'use client'
 
-"use client";
-
-// app/components/FlashcardApp.tsx
-
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
 import TextDisplay from './TextDisplay'
@@ -12,27 +8,17 @@ import FlashcardList from './FlashcardList'
 import StudyModeController from './StudyModeController'
 import ContinueLearning from './ContinueLearning'
 import { useFlashcards } from '../hooks/useFlashcards'
-import { useTextDisplay } from '../hooks/useTextDisplay' // Import the new hook
+import { useTextDisplay } from '../hooks/useTextDisplay'
+import { useStudyMode } from '../hooks/useStudyMode'
 
 export default function FlashcardApp() {
   const {
     savedFlashcards,
-    shuffledFlashcards,
-    currentCardIndex,
-    isFlipped,
-    isFinished,
-    reviewMode,
     saveFlashcard,
     deleteFlashcard,
-    reshuffleFlashcards,
-    nextCard,
-    previousCard,
-    flipCard,
-    reviewToughTerms,
-    handleStarClick,
+    starCard,
   } = useFlashcards();
 
-  // Use the new useTextDisplay hook
   const {
     simplified,
     showSimplified,
@@ -42,12 +28,28 @@ export default function FlashcardApp() {
     toggleOriginalText,
   } = useTextDisplay();
 
-  const [showFlashcards, setShowFlashcards] = useState(false)
-  const [showContinueLearning, setShowContinueLearning] = useState(false)
+  const {
+    isStudyMode,
+    shuffledFlashcards,
+    currentCardIndex,
+    isFlipped,
+    isFinished,
+    reviewMode,
+    startStudyMode,
+    nextCard,
+    previousCard,
+    flipCard,
+    restartStudy,
+    reviewToughTerms,
+    exitStudyMode,
+    handleStarClick,
+  } = useStudyMode(savedFlashcards, starCard);
+
+  const [showContinueLearning, setShowContinueLearning] = React.useState(false)
 
   const handleContinueLearning = () => {
     setShowContinueLearning(true)
-    setShowFlashcards(false)
+    exitStudyMode()
   }
 
   return (
@@ -66,10 +68,7 @@ export default function FlashcardApp() {
           <div className="mt-4">
             <Button 
               variant="outline" 
-              onClick={() => {
-                setShowFlashcards(true)
-                reshuffleFlashcards(savedFlashcards)
-              }}
+              onClick={startStudyMode}
               className="mb-4"
             >
               Learn Saved Flashcards
@@ -77,6 +76,7 @@ export default function FlashcardApp() {
             <FlashcardList 
               flashcards={savedFlashcards}
               onDelete={deleteFlashcard}
+              onStar={starCard}
             />
           </div>
         )}
@@ -84,19 +84,19 @@ export default function FlashcardApp() {
 
       <TextInput onSubmit={handleTextSubmit} />
 
-      {showFlashcards && (
+      {isStudyMode && (
         <StudyModeController
           flashcards={shuffledFlashcards}
           currentIndex={currentCardIndex}
           isFlipped={isFlipped}
           isFinished={isFinished}
           reviewMode={reviewMode}
-          onClose={() => setShowFlashcards(false)}
+          onClose={exitStudyMode}
           onFlip={flipCard}
           onStar={handleStarClick}
           onNext={nextCard}
           onPrevious={previousCard}
-          onRestart={() => reshuffleFlashcards(savedFlashcards)}
+          onRestart={restartStudy}
           onReviewToughTerms={reviewToughTerms}
           onContinueLearning={handleContinueLearning}
         />
