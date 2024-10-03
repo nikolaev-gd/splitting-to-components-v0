@@ -1,64 +1,62 @@
-// This component makes text interactive in our language learning app.
-// It turns each word in a given text into a clickable element.
-// When a user clicks on a word, it opens a dialog with more information about that word,
-// allowing the user to learn more and potentially save it as a flashcard for later study.
+// app/components/InteractiveText.tsx
 
-"use client"
 import React, { useState } from 'react'
 import FlashcardDialog from './FlashcardDialog'
-import { Flashcard as FlashcardType } from '@/lib/types'
+import { Flashcard } from '@/lib/types'
 
-// This defines what information our InteractiveText component needs to work
 interface InteractiveTextProps {
-  text: string                              // The text to make interactive
-  onWordClick: (word: string) => void       // Function to call when a word is clicked
-  onSaveFlashcard: (flashcard: FlashcardType) => void  // Function to call when a flashcard is saved
+  text: string
+  onWordClick: (word: string, sentence: string) => void
+  onSaveFlashcard: (flashcard: Flashcard) => void
 }
 
-// This is our main InteractiveText component
 export default function InteractiveText({ text, onWordClick, onSaveFlashcard }: InteractiveTextProps) {
-  // This keeps track of which word's dialog is currently open
   const [openDialogWord, setOpenDialogWord] = useState<string | null>(null);
+  const [openDialogSentence, setOpenDialogSentence] = useState<string | null>(null);
 
-  // This function is called when a word is clicked
-  const handleOpenDialog = (word: string) => {
-    setOpenDialogWord(word);  // Open the dialog for this word
-    onWordClick(word);        // Call the provided onWordClick function
+  const handleOpenDialog = (word: string, sentence: string) => {
+    setOpenDialogWord(word);
+    setOpenDialogSentence(sentence);
+    onWordClick(word, sentence);
   };
 
-  // This function is called when a dialog is closed
   const handleCloseDialog = () => {
-    setOpenDialogWord(null);  // Close any open dialog
+    setOpenDialogWord(null);
+    setOpenDialogSentence(null);
   };
+
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
 
   return (
     <>
-      {/* Split the text into words and map over each word */}
-      {text.split(' ').map((word, index) => (
-        <React.Fragment key={index}>
-          {word && (
-            // Wrap each word in a FlashcardDialog component
-            <FlashcardDialog 
-              word={word} 
-              onSave={(flashcard) => {
-                onSaveFlashcard(flashcard);  // Save the flashcard
-                handleCloseDialog();         // Close the dialog after saving
-              }}
-              isOpen={openDialogWord === word}  // Open this dialog if it's the selected word
-              onOpenChange={(open) => {
-                if (!open) handleCloseDialog();  // Close the dialog if open is false
-              }}
-            >
-              {/* This is the clickable word span */}
-              <span 
-                className="cursor-pointer hover:bg-gray-200 p-1 rounded"
-                onClick={() => handleOpenDialog(word)}
-              >
-                {word}
-              </span>
-            </FlashcardDialog>
-          )}
-          {' '}  {/* Add a space after each word */}
+      {sentences.map((sentence, sentenceIndex) => (
+        <React.Fragment key={sentenceIndex}>
+          {sentence.split(' ').map((word, wordIndex) => (
+            <React.Fragment key={`${sentenceIndex}-${wordIndex}`}>
+              {word && (
+                <FlashcardDialog 
+                  word={word} 
+                  sentence={sentence.trim()}
+                  onSave={(flashcard) => {
+                    onSaveFlashcard(flashcard);
+                    handleCloseDialog();
+                  }}
+                  isOpen={openDialogWord === word && openDialogSentence === sentence.trim()}
+                  onOpenChange={(open) => {
+                    if (!open) handleCloseDialog();
+                  }}
+                >
+                  <span 
+                    className="cursor-pointer hover:bg-gray-200 p-1 rounded"
+                    onClick={() => handleOpenDialog(word, sentence.trim())}
+                  >
+                    {word}
+                  </span>
+                </FlashcardDialog>
+              )}
+              {' '}
+            </React.Fragment>
+          ))}
         </React.Fragment>
       ))}
     </>

@@ -1,8 +1,4 @@
-// StudyModeController.tsx
-
-// This component manages the flashcard study mode, including card navigation,
-// flipping, and study session completion. It provides a user interface for
-// studying flashcards and controls the flow of the study session.
+// app/components/StudyModeController.tsx
 
 import React from 'react'
 import { Button } from "./ui/button"
@@ -44,7 +40,7 @@ export default function StudyModeController({
     if (isFinished) {
       return (
         <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-bold mb-4">You&apos;ve completed all flashcards!</h2>
+          <h2 className="text-2xl font-bold mb-4">You've completed all flashcards!</h2>
           <div className="flex flex-col space-y-4 w-64">
             <Button onClick={onRestart} className="w-full">Restart Flashcards</Button>
             <Button onClick={onReviewToughTerms} className="w-full">Review the Tough Terms</Button>
@@ -54,7 +50,6 @@ export default function StudyModeController({
         </div>
       )
     }
-
   
     const current = flashcards[currentIndex]
   
@@ -109,16 +104,12 @@ export default function StudyModeController({
                   <p className="mb-4">{current.simpleDefinition}</p>
                   <h4 className="font-semibold mb-2">Collocations:</h4>
                   <ul className="mb-4 list-disc list-inside">
-                    {current.collocations.map((collocation, index) => (
+                    {current.collocations.map((collocation: string, index: number) => (
                       <li key={index}>{collocation}</li>
                     ))}
                   </ul>
-                  <h4 className="font-semibold mb-2">Examples:</h4>
-                  <ul className="list-disc list-inside">
-                    {current.exampleSentences.map((sentence, index) => (
-                      <li key={index}>{sentence}</li>
-                    ))}
-                  </ul>
+                  <h4 className="font-semibold mb-2">Context Sentence:</h4>
+                  <p>{current.contextSentence}</p>
                 </div>
               )}
             </div>

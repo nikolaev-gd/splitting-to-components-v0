@@ -1,33 +1,32 @@
-// app/components/TextDisplay.tsx
-
-"use client"
-
-import React from 'react';
-import { Button } from "./ui/button";
-import InteractiveText from './InteractiveText';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useFlashcardContext } from '../contexts/FlashcardContext';
+import React from 'react'
+import { Button } from "./ui/button"
+import InteractiveText from './InteractiveText'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useFlashcardContext } from '../contexts/FlashcardContext'
 
 interface TextDisplayProps {
-  simplified: string[];
-  showSimplified: boolean;
-  showOriginal: boolean;
-  onSimplify: () => void;
-  onToggleOriginal: () => void;
+  simplified: string[]
+  showSimplified: boolean
+  showOriginal: boolean
+  onSimplify: () => void
+  onToggleOriginal: () => void
 }
 
-const TextDisplay: React.FC<TextDisplayProps> = ({
+export default function TextDisplay({
   simplified,
   showSimplified,
   showOriginal,
   onSimplify,
-  onToggleOriginal,
-}) => {
-  const { saveFlashcard } = useFlashcardContext();
+  onToggleOriginal
+}: TextDisplayProps) {
+  const { saveFlashcard } = useFlashcardContext()
+
+  const handleWordClick = (word: string, sentence: string) => {
+    console.log(`Clicked word: ${word}, Sentence: ${sentence}`)
+  }
 
   return (
     <div>
-      {/* Controls for simplifying and toggling text */}
       <div className="mb-4 flex justify-between items-center">
         <h2 className="text-xl font-bold">Title from ChatGPT</h2>
         {!showSimplified ? (
@@ -43,9 +42,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
         )}
       </div>
 
-      {/* Display area for text */}
       <div className="relative">
-        {/* Original text */}
         <AnimatePresence>
           {showOriginal && simplified.length > 0 && (
             <motion.div
@@ -60,7 +57,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
                   <p key={index} className="mb-4 last:mb-0">
                     <InteractiveText 
                       text={paragraph} 
-                      onWordClick={() => {}}
+                      onWordClick={handleWordClick}
                       onSaveFlashcard={saveFlashcard}
                     />
                   </p>
@@ -70,7 +67,6 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
           )}
         </AnimatePresence>
 
-        {/* Simplified text */}
         {showSimplified && simplified.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -83,7 +79,7 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
                 <p key={index} className="mb-4 last:mb-0">
                   <InteractiveText 
                     text={paragraph} 
-                    onWordClick={() => {}}
+                    onWordClick={handleWordClick}
                     onSaveFlashcard={saveFlashcard}
                   />
                 </p>
@@ -93,7 +89,5 @@ const TextDisplay: React.FC<TextDisplayProps> = ({
         )}
       </div>
     </div>
-  );
-};
-
-export default TextDisplay;
+  )
+}

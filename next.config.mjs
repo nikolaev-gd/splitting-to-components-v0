@@ -1,4 +1,16 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'oaidalleapiprodscus.blob.core.windows.net',
+          port: '',
+          pathname: '/private/**',
+        },
+      ],
+    },
+    // ... any other existing configurations
+  };
+  
+  export default nextConfig;

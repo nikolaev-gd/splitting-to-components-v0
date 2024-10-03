@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Trash2, Star } from 'lucide-react'
 import { Flashcard as FlashcardType } from '@/lib/types'
-import Image from 'next/image';
-import { useFlashcardContext } from '../contexts/FlashcardContext';
+import Image from 'next/image'
+import { useFlashcardContext } from '../contexts/FlashcardContext'
 
 interface FlashcardProps {
   flashcard: FlashcardType
@@ -84,22 +84,22 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
                 <h4 className="font-semibold">Simple Definition:</h4>
                 <p>{flashcard.simpleDefinition}</p>
               </div>
-              <div>
-                <h4 className="font-semibold">Collocations:</h4>
-                <ul className="list-disc list-inside">
-                  {flashcard.collocations.map((collocation, index) => (
-                    <li key={index}>{collocation}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold">Example Sentences:</h4>
-                <ul className="list-disc list-inside">
-                  {flashcard.exampleSentences.map((sentence, index) => (
-                    <li key={index}>{sentence}</li>
-                  ))}
-                </ul>
-              </div>
+              {flashcard.collocations && flashcard.collocations.length > 0 && (
+                <div>
+                  <h4 className="font-semibold">Collocations:</h4>
+                  <ul className="list-disc list-inside">
+                    {flashcard.collocations.map((collocation, index) => (
+                      <li key={index}>{collocation}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {flashcard.contextSentence && (
+                <div>
+                  <h4 className="font-semibold">Context Sentence:</h4>
+                  <p>{flashcard.contextSentence}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
