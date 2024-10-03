@@ -55,14 +55,20 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>{word}</DialogTitle>
+          <DialogTitle>Flashcard</DialogTitle>
         </DialogHeader>
         {loading ? (
           <div>Loading...</div>
         ) : flashcardData ? (
           <div className="grid gap-4 py-4">
-            <p>Lexical Item: {flashcardData.lexicalItem}</p>
-            <p>Original Sentence: {flashcardData.originalSentence}</p>
+            <h3 className="text-xl">
+              {flashcardData.lexicalItem.split(new RegExp(`(${flashcardData.word})`, 'i')).map((part, index) => (
+                <React.Fragment key={index}>
+                  {part.toLowerCase() === flashcardData.word.toLowerCase() ? <strong>{part}</strong> : part}
+                </React.Fragment>
+              ))}
+            </h3>
+            <p>{flashcardData.originalSentence}</p>
             {flashcardData.illustration && (
               <Image 
                 src={flashcardData.illustration} 
@@ -71,11 +77,18 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
                 height={200}
               />
             )}
-            <p>Definition: {flashcardData.simpleDefinition}</p>
+            <p><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
             {flashcardData.collocations && flashcardData.collocations.length > 0 && (
-              <p>Collocations: {flashcardData.collocations.join(', ')}</p>
+              <div>
+                <p><strong>Collocations:</strong></p>
+                <ul className="list-disc list-inside">
+                  {flashcardData.collocations.map((collocation, index) => (
+                    <li key={index}>{collocation}</li>
+                  ))}
+                </ul>
+              </div>
             )}
-            <p>Context Sentence: {flashcardData.contextSentence}</p>
+            <p><strong>Context Sentence:</strong> {flashcardData.contextSentence}</p>
           </div>
         ) : (
           <div>Error loading flashcard data</div>

@@ -85,8 +85,14 @@ export default function StudyModeController({
               {!isFlipped ? (
                 <>
                   <div className="flex-grow p-8 flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold mb-4">{current.word}</h3>
-                    <p>{current.originalSentence}</p>
+                    <h3 className="text-2xl mb-4">
+                      {current.lexicalItem.split(new RegExp(`(${current.word})`, 'i')).map((part, index) => (
+                        <React.Fragment key={index}>
+                          {part.toLowerCase() === current.word.toLowerCase() ? <strong>{part}</strong> : part}
+                        </React.Fragment>
+                      ))}
+                    </h3>
+                    <p className="mb-4"><strong>Original Sentence:</strong> {current.originalSentence}</p>
                   </div>
                   <div className="md:w-1/3 p-4 flex items-center justify-center md:border-l border-t md:border-t-0">
                     <Image 
@@ -107,8 +113,7 @@ export default function StudyModeController({
                     {current.collocations.map((collocation: string, index: number) => (
                       <li key={index}>{collocation}</li>
                     ))}
-                  </ul>
-                  <h4 className="font-semibold mb-2">Context Sentence:</h4>
+                  </ul>                  <h4 className="font-semibold mb-2">Context Sentence:</h4>
                   <p>{current.contextSentence}</p>
                 </div>
               )}

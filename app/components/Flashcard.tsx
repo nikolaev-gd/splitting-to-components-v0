@@ -59,7 +59,13 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row">
           <div className="md:w-2/5 pr-4 mb-4 md:mb-0">
-            <h3 className="text-xl font-bold mb-2">{flashcard.word}</h3>
+            <h3 className="text-xl mb-2">
+              {flashcard.lexicalItem.split(new RegExp(`(${flashcard.word})`, 'i')).map((part, index) => (
+                <React.Fragment key={index}>
+                  {part.toLowerCase() === flashcard.word.toLowerCase() ? <strong>{part}</strong> : part}
+                </React.Fragment>
+              ))}
+            </h3>
             <div className="space-y-2">
               <div>
                 <h4 className="font-semibold">Original Sentence:</h4>
@@ -85,14 +91,14 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
                 <p>{flashcard.simpleDefinition}</p>
               </div>
               {flashcard.collocations && flashcard.collocations.length > 0 && (
-                <div>
-                  <h4 className="font-semibold">Collocations:</h4>
-                  <ul className="list-disc list-inside">
-                    {flashcard.collocations.map((collocation, index) => (
-                      <li key={index}>{collocation}</li>
-                    ))}
-                  </ul>
-                </div>
+              <div>
+                <h4 className="font-semibold">Collocations:</h4>
+                <ul className="list-disc list-inside">
+                  {flashcard.collocations.map((collocation, index) => (
+                    <li key={index}>{collocation}</li>
+                  ))}
+                </ul>
+              </div>
               )}
               {flashcard.contextSentence && (
                 <div>

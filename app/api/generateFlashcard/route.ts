@@ -74,10 +74,13 @@ Provide the information in this sequence without including labels like "Main phr
     // Use placeholder image instead of generating from OpenAI
     const imageUrl = '/images/placeholder.png'
 
+    const normalizedMainPhrase = mainPhrase.replace(/^["']|["']$/g, '')
+
+
     const flashcardData: Flashcard = {
       id: Date.now().toString(),
       word: targetWord,
-      lexicalItem: mainPhrase,
+      lexicalItem: normalizedMainPhrase,
       originalSentence: initialSentence,
       simpleDefinition: explanation,
       collocations: collocations.split(', '),

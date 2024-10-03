@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import FlashcardDialog from './FlashcardDialog'
 import { Flashcard } from '@/lib/types'
+import { cleanWord } from '@/lib/utils'
 
 interface InteractiveTextProps {
   text: string
@@ -15,10 +16,15 @@ export default function InteractiveText({ text, onWordClick, onSaveFlashcard }: 
   const [openDialogSentence, setOpenDialogSentence] = useState<string | null>(null);
 
   const handleOpenDialog = (word: string, sentence: string) => {
-    setOpenDialogWord(word);
-    setOpenDialogSentence(sentence);
-    onWordClick(word, sentence);
-  };
+  const cleanedWord = cleanWord(word);
+  const phrasePattern = new RegExp(`\\b${cleanedWord}\\b([\\s,]*\\b\\w+\\b){0,3}`, 'i');
+  const match = sentence.match(phrasePattern);
+  const lexicalItem = match ? match[0].trim() : cleanedWord;
+  
+  setOpenDialogWord(cleanedWord);
+  setOpenDialogSentence(sentence);
+  onWordClick(cleanedWord, sentence, lexicalItem);
+};
 
   const handleCloseDialog = () => {
     setOpenDialogWord(null);
@@ -31,17 +37,17 @@ export default function InteractiveText({ text, onWordClick, onSaveFlashcard }: 
     <>
       {sentences.map((sentence, sentenceIndex) => (
         <React.Fragment key={sentenceIndex}>
-          {sentence.split(' ').map((word, wordIndex) => (
+          {sentence.split(/\s+/).map((word, wordIndex) => (
             <React.Fragment key={`${sentenceIndex}-${wordIndex}`}>
               {word && (
                 <FlashcardDialog 
-                  word={word} 
+                  word={cleanWord(word)} 
                   sentence={sentence.trim()}
                   onSave={(flashcard) => {
                     onSaveFlashcard(flashcard);
                     handleCloseDialog();
                   }}
-                  isOpen={openDialogWord === word && openDialogSentence === sentence.trim()}
+                  isOpen={openDialogWord === cleanWord(word) && openDialogSentence === sentence.trim()}
                   onOpenChange={(open) => {
                     if (!open) handleCloseDialog();
                   }}
