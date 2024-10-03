@@ -1,5 +1,69 @@
 # EngLearner Project
 
+## File Structure
+
+### Root Level
+- `README.md`
+- `components.json`
+- `next-env.d.ts`
+- `next.config.mjs`
+- `package-lock.json`
+- `package.json`
+- `postcss.config.mjs`
+- `tailwind.config.ts`
+- `tsconfig.json`
+- `tsconfig.tsbuildinfo`
+- `yarn.lock`
+
+### Directories
+
+#### `app/`
+- `api/generateFlashcard/route.ts`: API route for generating flashcards using OpenAI.
+- `components/`
+  - `ContinueLearning.tsx`
+  - `Flashcard.tsx`: Displays a single flashcard in study mode.
+  - `FlashcardApp.tsx`: Main component managing flashcards.
+  - `FlashcardDialog.tsx`: Pop-up for editing and saving flashcards.
+  - `FlashcardList.tsx`: Displays a list of saved flashcards.
+  - `InteractiveText.tsx`: Displays clickable words in text.
+  - `StudyModeController.tsx`: Controls and manages study mode.
+  - `TextDisplay.tsx`: Main component displaying pasted text.
+  - `TextInput.tsx`: Input field for pasting and submitting text.
+  - `ui/`
+    - `alert-dialog.tsx`
+    - `button.tsx`
+    - `card.tsx`
+    - `dialog.tsx`
+    - `textarea.tsx`
+- `contexts/FlashcardContext.tsx`: Global state management for flashcards.
+- `globals.css`
+- `hooks/`
+  - `useFlashcards.ts`: Manages flashcard state and actions.
+  - `useStudyMode.ts`: Controls study mode state.
+  - `useTextDisplay.ts`: Handles text display and interaction logic.
+- `layout.tsx`: Main layout component for structuring the app.
+- `lib/`
+  - `types.ts`: Type definitions used across the app.
+  - `utils.ts`: Utility functions for processing.
+- `page.tsx`: Main page of the application where text is entered and displayed.
+
+#### `public/`
+- `images/`
+  - `placeholder.png`
+
+## Technologies Used
+
+- Operating System: macOS
+- Code Editor: VS Code
+- Framework: Next.js (v14.2.13) with App Router
+- Language: TypeScript
+- Package Manager: Yarn
+- Version Control: Git
+- Database: Supabase
+- Authentication: Clerk for Authentication and User Management
+- AI Integration: OpenAI API
+- Image Generation: DALL-E 3
+
 ## Overview
 EngLearner is an English language learning app designed to help users improve their vocabulary and comprehension using the lexical approach, which emphasizes learning words and phrases in their natural context. By integrating content that the user is genuinely interested in, EngLearner makes the process of language learning more meaningful and effective. The app leverages modern language models like OpenAI to provide personalized learning experiences.
 
@@ -62,59 +126,3 @@ EngLearner is designed for users with a Pre-Intermediate level of English and ab
 - Self-motivated learners.
 - Interested in improving their English skills.
 - Challenged by unfamiliar vocabulary in the texts they wish to read.
-
-## File Structure
-
-### Root Level
-- `README.md`
-- `components.json`
-- `next-env.d.ts`
-- `next.config.mjs`
-- `package-lock.json`
-- `package.json`
-- `postcss.config.mjs`
-- `tailwind.config.ts`
-- `tsconfig.json`
-- `tsconfig.tsbuildinfo`
-- `yarn.lock`
-
-### Directories
-
-#### `app/`
-- `api/generateFlashcard/route.ts`: API route for generating flashcards using OpenAI.
-- `components/`
-  - `ContinueLearning.tsx`
-  - `Flashcard.tsx`: Displays a single flashcard in study mode.
-  - `FlashcardApp.tsx`: Main component managing flashcards.
-  - `FlashcardDialog.tsx`: Pop-up for editing and saving flashcards.
-  - `FlashcardList.tsx`: Displays a list of saved flashcards.
-  - `InteractiveText.tsx`: Displays clickable words in text.
-  - `StudyModeController.tsx`: Controls and manages study mode.
-  - `TextDisplay.tsx`: Main component displaying pasted text.
-  - `TextInput.tsx`: Input field for pasting and submitting text.
-  - `ui/`
-    - `alert-dialog.tsx`
-    - `button.tsx`
-    - `card.tsx`
-    - `dialog.tsx`
-    - `textarea.tsx`
-- `contexts/FlashcardContext.tsx`: Global state management for flashcards.
-- `globals.css`
-- `hooks/`
-  - `useFlashcards.ts`: Manages flashcard state and actions.
-  - `useStudyMode.ts`: Controls study mode state.
-  - `useTextDisplay.ts`: Handles text display and interaction logic.
-- `layout.tsx`: Main layout component for structuring the app.
-- `lib/`
-  - `types.ts`: Type definitions used across the app.
-  - `utils.ts`: Utility functions for processing.
-- `page.tsx`: Main page of the application where text is entered and displayed.
-
-#### `public/`
-- `images/`
-  - `placeholder.png`
-
-## Installation and Setup
-1. Clone the repository:
-   ```sh
-   git clone [repository_url]

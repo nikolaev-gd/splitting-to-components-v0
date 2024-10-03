@@ -55,6 +55,7 @@ Provide the information in this sequence without including labels like "Main phr
       throw new Error('Incomplete data from OpenAI response')
     }
 
+    /*
     let imageUrl: string
     try {
       const image = await openai.images.generate({
@@ -68,6 +69,10 @@ Provide the information in this sequence without including labels like "Main phr
       console.error('Error generating image:', imageError)
       imageUrl = '/placeholder-image.jpg'
     }
+    */
+
+    // Use placeholder image instead of generating from OpenAI
+    const imageUrl = '/images/placeholder.png'
 
     const flashcardData: Flashcard = {
       id: Date.now().toString(),
