@@ -8,6 +8,7 @@ const nextConfig = {
           port: '',
           pathname: '/private/**',
         },
+        // Add any other image sources you're using
       ],
     },
     // ... any other existing configurations

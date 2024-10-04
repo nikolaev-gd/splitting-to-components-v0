@@ -58,6 +58,16 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
           <div className="p-6">Loading...</div>
         ) : flashcardData ? (
           <div className="overflow-y-auto max-h-[85vh]">
+            {flashcardData.illustration && (
+              <div className="w-full h-48 relative">
+                <Image 
+                  src={flashcardData.illustration} 
+                  alt={`Illustration for ${flashcardData.word}`}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            )}
             <div className="p-6">
               <h3 className="text-xl mb-4">
                 {flashcardData.lexicalItem.split(new RegExp(`(${flashcardData.word})`, 'i')).map((part, index) => (
@@ -67,16 +77,6 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
                 ))}
               </h3>
               <p className="mb-4">{flashcardData.originalSentence}</p>
-              {flashcardData.illustration && (
-                <div className="mb-4">
-                  <Image 
-                    src={flashcardData.illustration} 
-                    alt={`Illustration for ${flashcardData.word}`}
-                    width={300}
-                    height={200}
-                  />
-                </div>
-              )}
               <p className="mb-4"><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
               {flashcardData.collocations && flashcardData.collocations.length > 0 && (
                 <div className="mb-4">
