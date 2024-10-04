@@ -1,7 +1,7 @@
 // app/components/FlashcardDialog.tsx
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Flashcard } from '@/lib/types'
 import Image from 'next/image'
@@ -53,49 +53,48 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px]">
-        <DialogHeader>
-          <DialogTitle>Flashcard</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden">
         {loading ? (
-          <div>Loading...</div>
+          <div className="p-6">Loading...</div>
         ) : flashcardData ? (
-          <div className="overflow-y-auto pr-6"> {/* Added overflow-y-auto and pr-6 */}
-            <h3 className="text-xl mb-4">
-              {flashcardData.lexicalItem.split(new RegExp(`(${flashcardData.word})`, 'i')).map((part, index) => (
-                <React.Fragment key={index}>
-                  {part.toLowerCase() === flashcardData.word.toLowerCase() ? <strong>{part}</strong> : part}
-                </React.Fragment>
-              ))}
-            </h3>
-            <p className="mb-4">{flashcardData.originalSentence}</p>
-            {flashcardData.illustration && (
-              <div className="mb-4">
-                <Image 
-                  src={flashcardData.illustration} 
-                  alt={`Illustration for ${flashcardData.word}`}
-                  width={300}
-                  height={200}
-                />
-              </div>
-            )}
-            <p className="mb-4"><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
-            {flashcardData.collocations && flashcardData.collocations.length > 0 && (
-              <div className="mb-4">
-                <p><strong>Collocations:</strong></p>
-                <ul className="list-disc list-inside">
-                  {flashcardData.collocations.map((collocation, index) => (
-                    <li key={index}>{collocation}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <p><strong>Context Sentence:</strong> {flashcardData.contextSentence}</p>
+          <div className="overflow-y-auto max-h-[85vh]">
+            <div className="p-6">
+              <h3 className="text-xl mb-4">
+                {flashcardData.lexicalItem.split(new RegExp(`(${flashcardData.word})`, 'i')).map((part, index) => (
+                  <React.Fragment key={index}>
+                    {part.toLowerCase() === flashcardData.word.toLowerCase() ? <strong>{part}</strong> : part}
+                  </React.Fragment>
+                ))}
+              </h3>
+              <p className="mb-4">{flashcardData.originalSentence}</p>
+              {flashcardData.illustration && (
+                <div className="mb-4">
+                  <Image 
+                    src={flashcardData.illustration} 
+                    alt={`Illustration for ${flashcardData.word}`}
+                    width={300}
+                    height={200}
+                  />
+                </div>
+              )}
+              <p className="mb-4"><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
+              {flashcardData.collocations && flashcardData.collocations.length > 0 && (
+                <div className="mb-4">
+                  <p><strong>Collocations:</strong></p>
+                  <ul className="list-disc list-inside">
+                    {flashcardData.collocations.map((collocation, index) => (
+                      <li key={index}>{collocation}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <p><strong>Context Sentence:</strong> {flashcardData.contextSentence}</p>
+            </div>
           </div>
         ) : (
-          <div>Error loading flashcard data</div>
+          <div className="p-6">Error loading flashcard data</div>
         )}
-        <DialogFooter>
+        <DialogFooter className="p-6 pt-0">
           <Button onClick={handleSave} disabled={!flashcardData}>Save Flashcard</Button>
         </DialogFooter>
       </DialogContent>
