@@ -67,9 +67,19 @@ export default function StudyModeController({
   
         <div className="flex-grow flex items-center justify-center p-4">
           <div 
-            className={`w-full max-w-3xl h-[500px] bg-white shadow-lg rounded-lg cursor-pointer transition-transform duration-500 ${isFlipped ? 'rotate-y-180' : ''} relative`}
+            className={`w-full max-w-3xl bg-white shadow-lg rounded-lg cursor-pointer transition-transform duration-500 ${isFlipped ? 'rotate-y-180' : ''} relative overflow-hidden`}
             onClick={onFlip}
           >
+            {/* Move the Image component to the top */}
+            <div className="w-full h-48 relative">
+              <Image 
+                src={current.illustration} 
+                alt={`Illustration for ${current.word}`} 
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+
             <Button
               variant="ghost"
               size="icon"
@@ -80,30 +90,19 @@ export default function StudyModeController({
               <Star className="h-6 w-6" fill={current.isStarred ? 'currentColor' : 'none'} />
               <span className="sr-only">Star card</span>
             </Button>
-  
-            <div className="w-full h-full flex flex-col md:flex-row">
+
+            <div className="w-full flex flex-col">
               {!isFlipped ? (
-                <>
-                  <div className="flex-grow p-8 flex flex-col justify-center">
-                    <h3 className="text-2xl mb-4">
-                      {current.lexicalItem.split(new RegExp(`(${current.word})`, 'i')).map((part, index) => (
-                        <React.Fragment key={index}>
-                          {part.toLowerCase() === current.word.toLowerCase() ? <strong>{part}</strong> : part}
-                        </React.Fragment>
-                      ))}
-                    </h3>
-                    <p className="mb-4"><strong>Original Sentence:</strong> {current.originalSentence}</p>
-                  </div>
-                  <div className="md:w-1/3 p-4 flex items-center justify-center md:border-l border-t md:border-t-0">
-                    <Image 
-                      src={current.illustration} 
-                      alt={`Illustration for ${current.word}`} 
-                      className="max-w-full max-h-full object-contain"
-                      width={500}
-                      height={300}
-                    />
-                  </div>
-                </>
+                <div className="p-8 flex flex-col justify-center">
+                  <h3 className="text-2xl mb-4">
+                    {current.lexicalItem.split(new RegExp(`(${current.word})`, 'i')).map((part, index) => (
+                      <React.Fragment key={index}>
+                        {part.toLowerCase() === current.word.toLowerCase() ? <strong>{part}</strong> : part}
+                      </React.Fragment>
+                    ))}
+                  </h3>
+                  <p className="mb-4"><strong>Original Sentence:</strong> {current.originalSentence}</p>
+                </div>
               ) : (
                 <div className="w-full h-full p-8 flex flex-col justify-center rotate-y-180">
                   <h4 className="font-semibold mb-2">Definition:</h4>
