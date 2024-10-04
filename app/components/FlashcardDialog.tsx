@@ -60,26 +60,28 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
         {loading ? (
           <div>Loading...</div>
         ) : flashcardData ? (
-          <div className="grid gap-4 py-4">
-            <h3 className="text-xl">
+          <div className="overflow-y-auto pr-6"> {/* Added overflow-y-auto and pr-6 */}
+            <h3 className="text-xl mb-4">
               {flashcardData.lexicalItem.split(new RegExp(`(${flashcardData.word})`, 'i')).map((part, index) => (
                 <React.Fragment key={index}>
                   {part.toLowerCase() === flashcardData.word.toLowerCase() ? <strong>{part}</strong> : part}
                 </React.Fragment>
               ))}
             </h3>
-            <p>{flashcardData.originalSentence}</p>
+            <p className="mb-4">{flashcardData.originalSentence}</p>
             {flashcardData.illustration && (
-              <Image 
-                src={flashcardData.illustration} 
-                alt={`Illustration for ${flashcardData.word}`}
-                width={300}
-                height={200}
-              />
+              <div className="mb-4">
+                <Image 
+                  src={flashcardData.illustration} 
+                  alt={`Illustration for ${flashcardData.word}`}
+                  width={300}
+                  height={200}
+                />
+              </div>
             )}
-            <p><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
+            <p className="mb-4"><strong>Definition:</strong> {flashcardData.simpleDefinition}</p>
             {flashcardData.collocations && flashcardData.collocations.length > 0 && (
-              <div>
+              <div className="mb-4">
                 <p><strong>Collocations:</strong></p>
                 <ul className="list-disc list-inside">
                   {flashcardData.collocations.map((collocation, index) => (

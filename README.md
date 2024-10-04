@@ -18,7 +18,9 @@
 ### Directories
 
 #### `app/`
-- `api/generateFlashcard/route.ts`: API route for generating flashcards using OpenAI.
+- `api/`
+  - `generateFlashcard/`
+    - `route.ts`: API route for generating flashcards using OpenAI.
 - `components/`
   - `ContinueLearning.tsx`
   - `Flashcard.tsx`: Displays a single flashcard in study mode.
@@ -35,7 +37,8 @@
     - `card.tsx`
     - `dialog.tsx`
     - `textarea.tsx`
-- `contexts/FlashcardContext.tsx`: Global state management for flashcards.
+- `contexts/`
+  - `FlashcardContext.tsx`: Global state management for flashcards.
 - `globals.css`
 - `hooks/`
   - `useFlashcards.ts`: Manages flashcard state and actions.

@@ -53,7 +53,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         // Styling for the dialog content: positioning, size, animations
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg",
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg max-h-[85vh]",
         "translate-x-[-50%] translate-y-[-50%] gap-4",
         "border bg-background p-6 shadow-lg duration-200",
         // Animation classes for opening and closing
@@ -64,6 +64,7 @@ const DialogContent = React.forwardRef<
         "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
         // Responsive rounded corners
         "sm:rounded-lg md:w-full",
+        "overflow-hidden grid grid-rows-[auto,1fr,auto]", // Added this line
         className // Allowing custom styles to be added
       )}
       {...props}
@@ -97,6 +98,7 @@ const DialogHeader = ({
     className={cn(
       // Styling for layout and text alignment
       "flex flex-col space-y-1.5 text-center sm:text-left",
+      "sticky top-0 bg-background pt-6 pb-2", // Added this line
       className
     )}
     {...props}
@@ -113,6 +115,7 @@ const DialogFooter = ({
     className={cn(
       // Styling to stack buttons on small screens and align them on larger screens
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "sticky bottom-0 bg-background pt-2 pb-6", // Added this line
       className
     )}
     {...props}
