@@ -18,6 +18,17 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
 
   return (
     <Card className="mb-6 relative">
+      {/* Move the Image component to the top */}
+      <div className="w-full h-48 relative">
+        <Image 
+          src={flashcard.illustration} 
+          alt={`Illustration for ${flashcard.word}`} 
+          layout="fill"
+          objectFit="cover"
+        />
+      </div>
+
+      {/* AlertDialog and Star button remain unchanged */}
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
@@ -57,8 +68,8 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
       </Button>
 
       <CardContent className="p-6">
-        <div className="flex flex-col md:flex-row">
-          <div className="md:w-2/5 pr-4 mb-4 md:mb-0">
+        <div className="flex flex-col">
+          <div className="mb-4">
             <h3 className="text-xl mb-2">
               {flashcard.lexicalItem.split(new RegExp(`(${flashcard.word})`, 'i')).map((part, index) => (
                 <React.Fragment key={index}>
@@ -66,47 +77,33 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
                 </React.Fragment>
               ))}
             </h3>
-            <div className="space-y-2">
-              <div>
-                <h4 className="font-semibold">Original Sentence:</h4>
-                <p>{flashcard.originalSentence}</p>
-              </div>
-              <div>
-                <h4 className="font-semibold">Illustration:</h4>
-                <Image 
-                  src={flashcard.illustration} 
-                  alt={`Illustration for ${flashcard.word}`} 
-                  width={500} 
-                  height={300} 
-                  className="mt-2 max-w-full h-auto" 
-                />
-              </div>
+            <div>
+              <h4 className="font-semibold">Original Sentence:</h4>
+              <p>{flashcard.originalSentence}</p>
             </div>
           </div>
 
-          <div className="md:w-3/5 md:pl-4 border-t md:border-t-0 md:border-l pt-4 md:pt-0">
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold">Simple Definition:</h4>
-                <p>{flashcard.simpleDefinition}</p>
-              </div>
-              {flashcard.collocations && flashcard.collocations.length > 0 && (
-              <div>
-                <h4 className="font-semibold">Collocations:</h4>
-                <ul className="list-disc list-inside">
-                  {flashcard.collocations.map((collocation, index) => (
-                    <li key={index}>{collocation}</li>
-                  ))}
-                </ul>
-              </div>
-              )}
-              {flashcard.contextSentence && (
-                <div>
-                  <h4 className="font-semibold">Context Sentence:</h4>
-                  <p>{flashcard.contextSentence}</p>
-                </div>
-              )}
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold">Simple Definition:</h4>
+              <p>{flashcard.simpleDefinition}</p>
             </div>
+            {flashcard.collocations && flashcard.collocations.length > 0 && (
+            <div>
+              <h4 className="font-semibold">Collocations:</h4>
+              <ul className="list-disc list-inside">
+                {flashcard.collocations.map((collocation, index) => (
+                  <li key={index}>{collocation}</li>
+                ))}
+              </ul>
+            </div>
+            )}
+            {flashcard.contextSentence && (
+              <div>
+                <h4 className="font-semibold">Context Sentence:</h4>
+                <p>{flashcard.contextSentence}</p>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
