@@ -22,9 +22,9 @@ export default function RootLayout({
   children: React.ReactNode // Type definition for the children prop
 }) {
   return (
-    <html lang="en"> {/* Set the language of the document to English */}
-      <body className={inter.className}> {/* Apply the Inter font to the body */}
-        {children} {/* Render the page's content inside the body */}
+    <html lang="en">
+      <body className={inter.className}>
+        {children}
       </body>
     </html>
   )

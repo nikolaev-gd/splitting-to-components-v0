@@ -75,7 +75,7 @@ export default function StudyModeController({
               <Image 
                 src={current.illustration} 
                 alt={`Illustration for ${current.word}`} 
-                layout="fill"
+                fill // Replaced layout="fill" with fill attribute
                 objectFit="cover"
               />
             </div>

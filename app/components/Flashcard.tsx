@@ -23,7 +23,7 @@ export default function Flashcard({ flashcard }: FlashcardProps) {
         <Image 
           src={flashcard.illustration} 
           alt={`Illustration for ${flashcard.word}`} 
-          layout="fill"
+          fill // Replaced layout="fill" with fill attribute
           objectFit="cover"
         />
       </div>

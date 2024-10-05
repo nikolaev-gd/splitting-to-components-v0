@@ -1,10 +1,11 @@
 // app/components/FlashcardDialog.tsx
 
 import React, { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Flashcard } from '@/lib/types'
 import Image from 'next/image'
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden" // Import VisuallyHidden
 
 interface FlashcardDialogProps {
   word: string
@@ -94,6 +95,9 @@ export default function FlashcardDialog({ word, sentence, onSave, children, isOp
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>Flashcard Details</DialogTitle>
+        </VisuallyHidden>
         {loading ? (
           <div className="p-6">Loading...</div>
         ) : error ? (
