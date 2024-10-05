@@ -1,5 +1,3 @@
-// app/api/generateFlashcard/route.ts
-
 import { NextResponse } from 'next/server'
 import { Flashcard } from '@/lib/types'
 import { OpenAIProvider } from '@/lib/openAIProvider'
@@ -7,6 +5,10 @@ import { AnthropicProvider } from '@/lib/anthropicProvider'
 import { AIProvider } from '@/lib/aiProvider'
 
 let aiProvider: AIProvider;
+
+console.log('AI_PROVIDER:', process.env.AI_PROVIDER);
+console.log('OPENAI_API_KEY:', process.env.OPENAI_API_KEY ? 'Loaded' : 'Not Loaded');
+console.log('ANTHROPIC_API_KEY:', process.env.ANTHROPIC_API_KEY ? 'Loaded' : 'Not Loaded');
 
 if (process.env.AI_PROVIDER === 'anthropic') {
   console.log('Using Anthropic provider');
@@ -16,81 +18,129 @@ if (process.env.AI_PROVIDER === 'anthropic') {
   aiProvider = new OpenAIProvider();
 }
 
-export async function POST(request: Request) {
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
+async function retry<T>(fn: () => Promise<T>, retries: number = MAX_RETRIES): Promise<T> {
   try {
-    const { targetWord, initialSentence } = await request.json()
+    return await fn();
+  } catch (error) {
+    console.error(`Error in retry (${MAX_RETRIES - retries + 1}/${MAX_RETRIES}):`, error);
+    if (retries > 0) {
+      console.log(`Retrying... (${MAX_RETRIES - retries + 1}/${MAX_RETRIES})`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+      return retry(fn, retries - 1);
+    }
+    throw error;
+  }
+}
+
+function parseAIResponse(content: string): string[] {
+  return content.split('\n').map(line => line.trim()).filter(line => line !== '');
+}
+
+export async function POST(request: Request) {
+  console.log('API route called');
+  try {
+    const { targetWord, initialSentence } = await request.json();
+    console.log('Received data:', { targetWord, initialSentence });
 
     if (!targetWord || !initialSentence) {
-      return NextResponse.json({ error: 'Missing targetWord or initialSentence' }, { status: 400 })
+      console.error('Missing targetWord or initialSentence');
+      return NextResponse.json({ error: 'Missing targetWord or initialSentence' }, { status: 400 });
     }
 
-    console.log(`Generating flashcard for word: ${targetWord}`);
+    const prompt = `You are a language learning assistant. Your task is to create a comprehensive flashcard for a given word in context. Follow these instructions precisely:
 
-    const prompt = `Use the following inputs:
-**Initial sentence:** [${initialSentence}]  
-**Target word:** [${targetWord}]  
-Follow these steps to create the flashcard:
-1. **Main phrase**: Extract the most common and natural word combination or structure with the target word from the initial sentence. Ensure that this phrase is directly presented without omissions.  
-2. **Explanation**: Provide the meaning of the target word in up to 5 words, making it as simple as possible.  
-3. **High-Frequency Collocations (HFC)**: Provide 3 high-frequency collocations using the target word in the same meaning as the explanation, separated by commas.  
-4. **Contextual sentence**: Create a simple sentence using the main phrase in a clear and easy-to-understand way.
-**Output format:**  
-Main phrase
-Explanation (up to 5 words)
-3 high-frequency collocations
-Contextual sentence
-Provide the information in this sequence without including labels like "Main phrase:" or "Explanation:". Just give the direct content in the specified order.`
+Input:
+Word: ${targetWord}
+Sentence: ${initialSentence}
+
+Output format (provide ONLY these 5 lines in order, without labels or extra text):
+Collocation from the sentence (natural phrase containing the word)
+Original sentence (unchanged)
+Brief definition (max 5 words, simple)
+Three common collocations (comma-separated)
+New simple sentence using the collocation
+
+Example output:
+take a deep breath
+John had to take a deep breath before giving his speech.
+inhale and exhale slowly
+take a break, take a chance, take a look
+Remember to take a deep breath when you feel stressed.
+
+Your response:`;
 
     console.log('Sending prompt to AI provider');
     let completion;
     try {
-      completion = await aiProvider.generateCompletion(prompt);
+      completion = await retry(() => aiProvider.generateCompletion(prompt));
+      console.log('AI provider response:', completion);
+      
+      if (!completion || !completion.content) {
+        throw new Error('Invalid response from AI provider');
+      }
     } catch (error) {
       console.error('Error from AI provider:', error);
-      throw new Error(`AI provider error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      return NextResponse.json({ 
+        error: 'AI provider error', 
+        details: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      }, { status: 500 });
     }
 
-    const content = completion.content;
+    const content = completion.content.trim();
+    console.log('Processed AI response:', content);
 
     if (!content) {
       console.error('No content generated from AI provider');
-      throw new Error('No content generated from AI provider')
+      return NextResponse.json({ error: 'No content generated' }, { status: 500 });
     }
 
-    console.log('AI provider response:', content);
+    const parts = parseAIResponse(content);
 
-    const [mainPhrase, explanation, collocations, contextSentence] = content.split('\n')
-
-    if (!mainPhrase || !explanation || !collocations || !contextSentence) {
+    if (parts.length < 5) {
       console.error('Incomplete data from AI provider response');
-      throw new Error('Incomplete data from AI provider response')
+      return NextResponse.json({ 
+        error: 'Incomplete data from AI provider', 
+        parts,
+        rawResponse: content
+      }, { status: 500 });
     }
 
-    // Use placeholder image instead of generating from OpenAI
-    const imageUrl = '/images/placeholder.png'
+    const [lexicalItem, originalSentence, simpleDefinition, collocations, contextSentence] = parts;
 
-    const normalizedMainPhrase = mainPhrase.replace(/^["']|["']$/g, '')
+    const imageUrl = '/images/placeholder.png'
 
     const flashcardData: Flashcard = {
       id: Date.now().toString(),
       word: targetWord,
-      lexicalItem: normalizedMainPhrase,
-      originalSentence: initialSentence,
-      simpleDefinition: explanation,
-      collocations: collocations.split(', '),
+      lexicalItem,
+      originalSentence,
+      simpleDefinition,
+      collocations: collocations.split(',').map(c => c.trim()),
       contextSentence,
       illustration: imageUrl,
       isStarred: false
     }
 
     console.log('Generated flashcard data:', flashcardData);
-
     return NextResponse.json(flashcardData)
   } catch (error) {
-    console.error('Error generating flashcard:', error)
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500 })
+    console.error('Error in API route:', error);
+    return NextResponse.json({ 
+      error: 'An unexpected error occurred', 
+      details: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    }, { status: 500 });
   }
+}
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '1mb',
+    },
+  },
 }

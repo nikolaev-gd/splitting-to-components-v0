@@ -12,12 +12,16 @@ export class AnthropicProvider extends AIProvider {
   }
 
   async generateCompletion(prompt: string): Promise<AICompletionResult> {
+    console.log('AnthropicProvider: Generating completion');
     try {
       const completion = await this.anthropic.completions.create({
         model: "claude-2",
-        max_tokens_to_sample: 300,
+        max_tokens_to_sample: 500,
         prompt: `Human: ${prompt}\n\nAssistant:`,
+        stop_sequences: ["\n\nHuman:"],
       });
+
+      console.log('Anthropic response:', completion.completion);
 
       return {
         content: completion.completion

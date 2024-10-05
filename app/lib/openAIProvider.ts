@@ -12,6 +12,7 @@ export class OpenAIProvider extends AIProvider {
   }
 
   async generateCompletion(prompt: string): Promise<AICompletionResult> {
+    console.log('OpenAIProvider: Generating completion');
     try {
       const completion = await this.openai.chat.completions.create({
         model: "gpt-4",
@@ -26,6 +27,8 @@ export class OpenAIProvider extends AIProvider {
           }
         ]
       });
+
+      console.log('OpenAI response:', completion.choices[0]?.message?.content);
 
       return {
         content: completion.choices[0]?.message?.content || ''
