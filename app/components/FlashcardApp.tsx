@@ -89,11 +89,15 @@ function FlashcardAppContent({
     reviewToughTerms,
     exitStudyMode,
     handleStarClick,
+    storyTitle,
+    storyContent,
+    generateStory,
   } = useStudyMode();
 
-  const handleContinueLearning = () => {
-    setShowContinueLearning(true)
-    exitStudyMode()
+  const handleContinueLearning = async () => {
+    await generateStory();
+    setShowContinueLearning(true);
+    exitStudyMode();
   }
 
   return (
@@ -144,8 +148,12 @@ function FlashcardAppContent({
         />
       )}
 
-      {showContinueLearning && (
-        <ContinueLearning onClose={() => setShowContinueLearning(false)} />
+      {showContinueLearning && storyTitle && storyContent && (
+        <ContinueLearning 
+          onClose={() => setShowContinueLearning(false)}
+          title={storyTitle}
+          story={storyContent}
+        />
       )}
     </div>
   )

@@ -13,6 +13,8 @@ export function useStudyMode() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [reviewMode, setReviewMode] = useState<'all' | 'starred'>('all');
+  const [storyTitle, setStoryTitle] = useState('');
+  const [storyContent, setStoryContent] = useState('');
 
   useEffect(() => {
     if (isStudyMode) {
@@ -89,6 +91,33 @@ export function useStudyMode() {
     }
   }, [starCard]);
 
+  const generateStory = useCallback(async () => {
+    const phrases = shuffledFlashcards.map(card => card.lexicalItem);
+    console.log('Generating story with phrases:', phrases);
+    try {
+      const response = await fetch('/api/generateStory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phrases }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Received story data:', data);
+      setStoryTitle(data.title);
+      setStoryContent(data.story);
+    } catch (error) {
+      console.error('Error generating story:', error);
+      // Добавим уведомление пользователю об ошибке
+      alert('Failed to generate story. Please try again.');
+    }
+  }, [shuffledFlashcards]);
+
   return {
     isStudyMode,
     shuffledFlashcards,
@@ -104,5 +133,8 @@ export function useStudyMode() {
     reviewToughTerms,
     exitStudyMode,
     handleStarClick,
+    storyTitle,
+    storyContent,
+    generateStory,
   };
 }
