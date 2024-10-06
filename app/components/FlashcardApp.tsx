@@ -1,16 +1,18 @@
 // app/components/FlashcardApp.tsx
 
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "./ui/button"
 import TextInput from './TextInput'
 import TextDisplay from './TextDisplay'
 import FlashcardList from './FlashcardList'
 import StudyModeController from './StudyModeController'
 import ContinueLearning from './ContinueLearning'
+import Sidebar from './Sidebar'
 import { FlashcardProvider, useFlashcardContext } from '../contexts/FlashcardContext'
 import { useTextDisplay } from '../hooks/useTextDisplay'
 import { useStudyMode } from '../hooks/useStudyMode'
+import { Menu } from 'lucide-react'
 
 export default function FlashcardApp() {
   const {
@@ -26,6 +28,7 @@ export default function FlashcardApp() {
   } = useTextDisplay();
 
   const [showContinueLearning, setShowContinueLearning] = React.useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
     <FlashcardProvider>
@@ -41,6 +44,8 @@ export default function FlashcardApp() {
         setShowContinueLearning={setShowContinueLearning}
         isSimplifying={isSimplifying}
         error={error}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
       />
     </FlashcardProvider>
   )
@@ -58,6 +63,8 @@ interface FlashcardAppContentProps {
   setShowContinueLearning: React.Dispatch<React.SetStateAction<boolean>>;
   isSimplifying: boolean;
   error: string | null;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function FlashcardAppContent({
@@ -72,6 +79,8 @@ function FlashcardAppContent({
   setShowContinueLearning,
   isSimplifying,
   error,
+  isSidebarOpen,
+  setIsSidebarOpen,
 }: FlashcardAppContentProps) {
   const { savedFlashcards } = useFlashcardContext();
   const {
@@ -101,8 +110,16 @@ function FlashcardAppContent({
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex-grow overflow-auto p-4">
+    <div className={`flex flex-col h-screen ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      <header className="flex items-center justify-between p-4 bg-white shadow-sm">
+        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <Menu className="h-6 w-6" />
+        </Button>
+        <h1 className="text-2xl font-bold text-center flex-grow">EngLearner</h1>
+        <div className="w-10" />
+      </header>
+
+      <div className="flex-grow overflow-auto p-4 main-content">
         <TextDisplay
           originalText={originalText}
           simplifiedText={simplifiedText}
@@ -155,6 +172,8 @@ function FlashcardAppContent({
           story={storyContent}
         />
       )}
+
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </div>
   )
 }

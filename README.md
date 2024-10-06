@@ -12,8 +12,8 @@
 - `postcss.config.mjs`
 - `tailwind.config.ts`
 - `tsconfig.json`
-- `tsconfig.tsbuildinfo`
-- `yarn.lock`
+- `.eslintrc.json`
+- `.gitignore`
 
 ### Directories
 
@@ -21,11 +21,12 @@
 - `api/`
   - `generateFlashcard/`
     - `route.ts`: API route for generating flashcards using OpenAI.
+  - `simplifyText/`
+    - `route.ts`: API route for simplifying text.
 - `components/`
   - `ContinueLearning.tsx`
   - `Flashcard.tsx`: Displays a single flashcard in study mode.
   - `FlashcardApp.tsx`: Main component managing flashcards.
-  - `FlashcardDialog.tsx`: Pop-up for editing and saving flashcards.
   - `FlashcardList.tsx`: Displays a list of saved flashcards.
   - `InteractiveText.tsx`: Displays clickable words in text.
   - `StudyModeController.tsx`: Controls and manages study mode.
@@ -46,6 +47,9 @@
   - `useTextDisplay.ts`: Handles text display and interaction logic.
 - `layout.tsx`: Main layout component for structuring the app.
 - `lib/`
+  - `aiProvider.ts`: Interface for AI provider.
+  - `aiProviderFactory.ts`: Factory for creating AI provider instances.
+  - `anthropicProvider.ts`: Anthropic-specific AI provider implementation.
   - `types.ts`: Type definitions used across the app.
   - `utils.ts`: Utility functions for processing.
 - `page.tsx`: Main page of the application where text is entered and displayed.
