@@ -3,19 +3,26 @@ import { Button } from "./ui/button"
 import InteractiveText from './InteractiveText'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useFlashcardContext } from '../contexts/FlashcardContext'
+import { Loader2 } from 'lucide-react'
 
 interface TextDisplayProps {
-  simplified: string[]
+  originalText: string[]
+  simplifiedText: string[]
   showSimplified: boolean
   showOriginal: boolean
+  isSimplifying: boolean
+  error: string | null
   onSimplify: () => void
   onToggleOriginal: () => void
 }
 
 export default function TextDisplay({
-  simplified,
+  originalText,
+  simplifiedText,
   showSimplified,
   showOriginal,
+  isSimplifying,
+  error,
   onSimplify,
   onToggleOriginal
 }: TextDisplayProps) {
@@ -30,7 +37,16 @@ export default function TextDisplay({
       <div className="mb-4 flex justify-between items-center">
         <h2 className="text-xl font-bold">Title from ChatGPT</h2>
         {!showSimplified ? (
-          <Button onClick={onSimplify}>Simplify Text</Button>
+          <Button onClick={onSimplify} disabled={isSimplifying}>
+            {isSimplifying ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Simplifying...
+              </>
+            ) : (
+              'Simplify Text'
+            )}
+          </Button>
         ) : (
           <Button 
             onClick={onToggleOriginal} 
@@ -42,18 +58,25 @@ export default function TextDisplay({
         )}
       </div>
 
+      {error && (
+        <div className="text-red-500 mb-4">
+          Error: {error}
+        </div>
+      )}
+
       <div className="relative">
         <AnimatePresence>
-          {showOriginal && simplified.length > 0 && (
+          {showOriginal && originalText && originalText.length > 0 && (
             <motion.div
-              initial={{ height: 'auto', opacity: 1 }}
+              initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.5 }}
               className="overflow-hidden"
             >
               <div className="border p-4 mb-4">
-                {simplified.map((paragraph, index) => (
+                <h3 className="text-lg font-semibold mb-2">Original Text</h3>
+                {originalText.map((paragraph, index) => (
                   <p key={index} className="mb-4 last:mb-0">
                     <InteractiveText 
                       text={paragraph} 
@@ -67,25 +90,18 @@ export default function TextDisplay({
           )}
         </AnimatePresence>
 
-        {showSimplified && simplified.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="border p-4 mb-4">
-              <h2 className="text-xl font-bold mb-2">Simplified Text</h2>
-              {simplified.map((paragraph, index) => (
-                <p key={index} className="mb-4 last:mb-0">
-                  <InteractiveText 
-                    text={paragraph} 
-                    onWordClick={handleWordClick}
-                    onSaveFlashcard={saveFlashcard}
-                  />
-                </p>
-              ))}
-            </div>
-          </motion.div>
+        {showSimplified && simplifiedText && simplifiedText.length > 0 && (
+          <div className="border p-4 mb-4">
+            {simplifiedText.map((paragraph, index) => (
+              <p key={index} className="mb-4 last:mb-0">
+                <InteractiveText 
+                  text={paragraph} 
+                  onWordClick={handleWordClick}
+                  onSaveFlashcard={saveFlashcard}
+                />
+              </p>
+            ))}
+          </div>
         )}
       </div>
     </div>

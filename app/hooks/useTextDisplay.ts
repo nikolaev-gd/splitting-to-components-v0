@@ -3,35 +3,75 @@
 import { useState } from 'react';
 
 export function useTextDisplay() {
-  // State for storing the simplified text
-  const [simplified, setSimplified] = useState<string[]>([]);
-  // State for controlling visibility of simplified and original text
+  const [originalText, setOriginalText] = useState<string[]>([]);
+  const [simplifiedText, setSimplifiedText] = useState<string[]>([]);
   const [showSimplified, setShowSimplified] = useState(false);
   const [showOriginal, setShowOriginal] = useState(true);
+  const [isSimplifying, setIsSimplifying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Function to handle text submission
   const handleTextSubmit = (submittedText: string) => {
     if (submittedText.trim() !== '') {
-      // Split the text into paragraphs and filter out empty ones
-      setSimplified(submittedText.split('\n').filter(paragraph => paragraph.trim() !== ''));
+      const paragraphs = submittedText.split('\n').filter(paragraph => paragraph.trim() !== '');
+      setOriginalText(paragraphs);
+      setSimplifiedText([]);
+      setShowOriginal(true);
+      setShowSimplified(false);
     }
   };
 
-  // Function to handle text simplification
-  const handleSimplify = () => {
-    setShowSimplified(true);
-    setShowOriginal(false);
+  const handleSimplify = async () => {
+    setIsSimplifying(true);
+    setError(null);
+    try {
+      console.log('Simplifying text:', originalText.join('\n'));
+      const response = await fetch('/api/simplifyText', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: originalText.join('\n') }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to simplify text: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Received simplified text:', data.simplifiedText);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Additional cleaning of the simplified text
+      let cleanedText = data.simplifiedText.replace(/^(here is a simplified version of the (input )?text:?|simplified text:?)/i, '').trim();
+      if (/^(here|this|following|below)/i.test(cleanedText)) {
+        cleanedText = cleanedText.replace(/^[^.!?]+[.!?]\s*/i, '').trim();
+      }
+
+      setSimplifiedText(cleanedText.split('\n').filter(paragraph => paragraph.trim() !== ''));
+      setShowSimplified(true);
+      setShowOriginal(false);
+    } catch (err) {
+      console.error('Error during simplification:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsSimplifying(false);
+    }
   };
 
-  // Function to toggle visibility of original text
   const toggleOriginalText = () => {
     setShowOriginal(!showOriginal);
   };
 
   return {
-    simplified,
+    originalText,
+    simplifiedText,
     showSimplified,
     showOriginal,
+    isSimplifying,
+    error,
     handleTextSubmit,
     handleSimplify,
     toggleOriginalText,

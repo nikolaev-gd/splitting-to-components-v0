@@ -14,12 +14,15 @@ import { useStudyMode } from '../hooks/useStudyMode'
 
 export default function FlashcardApp() {
   const {
-    simplified,
+    originalText,
+    simplifiedText,
     showSimplified,
     showOriginal,
     handleTextSubmit,
     handleSimplify,
     toggleOriginalText,
+    isSimplifying,
+    error,
   } = useTextDisplay();
 
   const [showContinueLearning, setShowContinueLearning] = React.useState(false)
@@ -27,7 +30,8 @@ export default function FlashcardApp() {
   return (
     <FlashcardProvider>
       <FlashcardAppContent 
-        simplified={simplified}
+        originalText={originalText}
+        simplifiedText={simplifiedText}
         showSimplified={showSimplified}
         showOriginal={showOriginal}
         handleTextSubmit={handleTextSubmit}
@@ -35,13 +39,16 @@ export default function FlashcardApp() {
         toggleOriginalText={toggleOriginalText}
         showContinueLearning={showContinueLearning}
         setShowContinueLearning={setShowContinueLearning}
+        isSimplifying={isSimplifying}
+        error={error}
       />
     </FlashcardProvider>
   )
 }
 
 interface FlashcardAppContentProps {
-  simplified: string[];
+  originalText: string[];
+  simplifiedText: string[];
   showSimplified: boolean;
   showOriginal: boolean;
   handleTextSubmit: (text: string) => void;
@@ -49,17 +56,22 @@ interface FlashcardAppContentProps {
   toggleOriginalText: () => void;
   showContinueLearning: boolean;
   setShowContinueLearning: React.Dispatch<React.SetStateAction<boolean>>;
+  isSimplifying: boolean;
+  error: string | null;
 }
 
 function FlashcardAppContent({
-  simplified,
+  originalText,
+  simplifiedText,
   showSimplified,
   showOriginal,
   handleTextSubmit,
   handleSimplify,
   toggleOriginalText,
   showContinueLearning,
-  setShowContinueLearning
+  setShowContinueLearning,
+  isSimplifying,
+  error,
 }: FlashcardAppContentProps) {
   const { savedFlashcards } = useFlashcardContext();
   const {
@@ -88,9 +100,12 @@ function FlashcardAppContent({
     <div className="flex flex-col h-screen">
       <div className="flex-grow overflow-auto p-4">
         <TextDisplay
-          simplified={simplified}
+          originalText={originalText}
+          simplifiedText={simplifiedText}
           showSimplified={showSimplified}
           showOriginal={showOriginal}
+          isSimplifying={isSimplifying}
+          error={error}
           onSimplify={handleSimplify}
           onToggleOriginal={toggleOriginalText}
         />
