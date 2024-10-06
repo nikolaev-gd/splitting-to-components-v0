@@ -10,6 +10,7 @@ export function useTextDisplay() {
   const [isSimplifying, setIsSimplifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasText, setHasText] = useState(false);
+  const [title, setTitle] = useState<string>(''); // Добавляем состояние для заголовка
 
   const handleTextSubmit = (submittedText: string) => {
     if (submittedText.trim() !== '') {
@@ -19,8 +20,13 @@ export function useTextDisplay() {
       setShowOriginal(true);
       setShowSimplified(false);
       setHasText(true);
+      
+      // Устанавливаем заголовок из первых двух слов
+      const firstTwoWords = submittedText.trim().split(/\s+/).slice(0, 2).join(' ');
+      setTitle(firstTwoWords);
     } else {
       setHasText(false);
+      setTitle('');
     }
   };
 
@@ -76,9 +82,10 @@ export function useTextDisplay() {
     showOriginal,
     isSimplifying,
     error,
+    hasText,
+    title, // Добавляем title в возвращаемый объект
     handleTextSubmit,
     handleSimplify,
     toggleOriginalText,
-    hasText,
   };
 }

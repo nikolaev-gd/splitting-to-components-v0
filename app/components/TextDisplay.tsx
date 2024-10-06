@@ -14,7 +14,8 @@ interface TextDisplayProps {
   error: string | null
   onSimplify: () => void
   onToggleOriginal: () => void
-  hasText: boolean;
+  hasText: boolean
+  title: string // Добавляем новое свойство
 }
 
 export default function TextDisplay({
@@ -26,7 +27,8 @@ export default function TextDisplay({
   error,
   onSimplify,
   onToggleOriginal,
-  hasText
+  hasText,
+  title // Добавляем новое свойство
 }: TextDisplayProps) {
   const { saveFlashcard } = useFlashcardContext()
 
@@ -38,7 +40,7 @@ export default function TextDisplay({
     <div>
       {hasText && (
         <div className="mb-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Title from ChatGPT</h2>
+          <h2 className="text-xl font-bold">{title}</h2>
           {!showSimplified ? (
             <Button onClick={onSimplify} disabled={isSimplifying}>
               {isSimplifying ? (
