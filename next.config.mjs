@@ -15,6 +15,10 @@ const nextConfig = {
     ]
   },
   reactStrictMode: true,
+  env: {
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    AI_PROVIDER: process.env.AI_PROVIDER,
+  },
 }
 
 export default nextConfig;

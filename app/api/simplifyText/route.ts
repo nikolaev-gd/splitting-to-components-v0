@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { AnthropicProvider } from '@/lib/anthropicProvider'
+import { createAIProvider } from '@/lib/aiProviderFactory'
 
-const aiProvider = new AnthropicProvider();
+const aiProvider = createAIProvider();
 
 export async function POST(request: Request) {
   try {

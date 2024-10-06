@@ -6,6 +6,7 @@ export class AnthropicProvider extends AIProvider {
 
   constructor() {
     super();
+    console.log('API Key:', process.env.ANTHROPIC_API_KEY); // Удалите эту строку после отладки
     this.anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
