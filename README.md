@@ -3,60 +3,25 @@
 ## File Structure
 
 ### Root Level
-- `README.md`
-- `components.json`
-- `next-env.d.ts`
-- `next.config.mjs`
-- `package-lock.json`
-- `package.json`
-- `postcss.config.mjs`
-- `tailwind.config.ts`
-- `tsconfig.json`
-- `.eslintrc.json`
-- `.gitignore`
+// Проверьте и обновите список файлов на корневом уровне
 
 ### Directories
 
 #### `app/`
+// Проверьте и обновите структуру app/ директории
 - `api/`
-  - `generateFlashcard/`
-    - `route.ts`: API route for generating flashcards using OpenAI.
-  - `simplifyText/`
-    - `route.ts`: API route for simplifying text.
+  // Убедитесь, что все API маршруты актуальны
 - `components/`
-  - `ContinueLearning.tsx`
-  - `Flashcard.tsx`: Displays a single flashcard in study mode.
-  - `FlashcardApp.tsx`: Main component managing flashcards.
-  - `FlashcardList.tsx`: Displays a list of saved flashcards.
-  - `InteractiveText.tsx`: Displays clickable words in text.
-  - `StudyModeController.tsx`: Controls and manages study mode.
-  - `TextDisplay.tsx`: Main component displaying pasted text.
-  - `TextInput.tsx`: Input field for pasting and submitting text.
-  - `ui/`
-    - `alert-dialog.tsx`
-    - `button.tsx`
-    - `card.tsx`
-    - `dialog.tsx`
-    - `textarea.tsx`
+  // Проверьте список компонентов и обновите при необходимости
 - `contexts/`
-  - `FlashcardContext.tsx`: Global state management for flashcards.
-- `globals.css`
+  // Убедитесь, что все контексты перечислены
 - `hooks/`
-  - `useFlashcards.ts`: Manages flashcard state and actions.
-  - `useStudyMode.ts`: Controls study mode state.
-  - `useTextDisplay.ts`: Handles text display and interaction logic.
-- `layout.tsx`: Main layout component for structuring the app.
+  // Проверьте список хуков
 - `lib/`
-  - `aiProvider.ts`: Interface for AI provider.
-  - `aiProviderFactory.ts`: Factory for creating AI provider instances.
-  - `anthropicProvider.ts`: Anthropic-specific AI provider implementation.
-  - `types.ts`: Type definitions used across the app.
-  - `utils.ts`: Utility functions for processing.
-- `page.tsx`: Main page of the application where text is entered and displayed.
+  // Убедитесь, что все утилиты и провайдеры перечислены
 
 #### `public/`
-- `images/`
-  - `placeholder.png`
+// Проверьте содержимое public/ директории
 
 ## Technologies Used
 

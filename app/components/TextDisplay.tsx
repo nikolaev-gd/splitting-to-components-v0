@@ -14,6 +14,7 @@ interface TextDisplayProps {
   error: string | null
   onSimplify: () => void
   onToggleOriginal: () => void
+  hasText: boolean;
 }
 
 export default function TextDisplay({
@@ -24,7 +25,8 @@ export default function TextDisplay({
   isSimplifying,
   error,
   onSimplify,
-  onToggleOriginal
+  onToggleOriginal,
+  hasText
 }: TextDisplayProps) {
   const { saveFlashcard } = useFlashcardContext()
 
@@ -34,29 +36,31 @@ export default function TextDisplay({
 
   return (
     <div>
-      <div className="mb-4 flex justify-between items-center">
-        <h2 className="text-xl font-bold">Title from ChatGPT</h2>
-        {!showSimplified ? (
-          <Button onClick={onSimplify} disabled={isSimplifying}>
-            {isSimplifying ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Simplifying...
-              </>
-            ) : (
-              'Simplify Text'
-            )}
-          </Button>
-        ) : (
-          <Button 
-            onClick={onToggleOriginal} 
-            aria-expanded={showOriginal}
-            aria-controls="original-text"
-          >
-            {showOriginal ? 'Hide Original Text' : 'Show Original Text'}
-          </Button>
-        )}
-      </div>
+      {hasText && (
+        <div className="mb-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold">Title from ChatGPT</h2>
+          {!showSimplified ? (
+            <Button onClick={onSimplify} disabled={isSimplifying}>
+              {isSimplifying ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Simplifying...
+                </>
+              ) : (
+                'Simplify Text'
+              )}
+            </Button>
+          ) : (
+            <Button 
+              onClick={onToggleOriginal} 
+              aria-expanded={showOriginal}
+              aria-controls="original-text"
+            >
+              {showOriginal ? 'Hide Original Text' : 'Show Original Text'}
+            </Button>
+          )}
+        </div>
+      )}
 
       {error && (
         <div className="text-red-500 mb-4">

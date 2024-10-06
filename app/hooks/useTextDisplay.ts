@@ -9,6 +9,7 @@ export function useTextDisplay() {
   const [showOriginal, setShowOriginal] = useState(true);
   const [isSimplifying, setIsSimplifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasText, setHasText] = useState(false);
 
   const handleTextSubmit = (submittedText: string) => {
     if (submittedText.trim() !== '') {
@@ -17,6 +18,9 @@ export function useTextDisplay() {
       setSimplifiedText([]);
       setShowOriginal(true);
       setShowSimplified(false);
+      setHasText(true);
+    } else {
+      setHasText(false);
     }
   };
 
@@ -75,5 +79,6 @@ export function useTextDisplay() {
     handleTextSubmit,
     handleSimplify,
     toggleOriginalText,
+    hasText,
   };
 }

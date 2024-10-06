@@ -25,6 +25,7 @@ export default function FlashcardApp() {
     toggleOriginalText,
     isSimplifying,
     error,
+    hasText,
   } = useTextDisplay();
 
   const [showContinueLearning, setShowContinueLearning] = React.useState(false)
@@ -46,6 +47,7 @@ export default function FlashcardApp() {
         error={error}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        hasText={hasText}
       />
     </FlashcardProvider>
   )
@@ -65,6 +67,7 @@ interface FlashcardAppContentProps {
   error: string | null;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  hasText: boolean;
 }
 
 function FlashcardAppContent({
@@ -81,6 +84,7 @@ function FlashcardAppContent({
   error,
   isSidebarOpen,
   setIsSidebarOpen,
+  hasText,
 }: FlashcardAppContentProps) {
   const { savedFlashcards } = useFlashcardContext();
   const {
@@ -129,6 +133,7 @@ function FlashcardAppContent({
           error={error}
           onSimplify={handleSimplify}
           onToggleOriginal={toggleOriginalText}
+          hasText={hasText}
         />
 
         {savedFlashcards.length > 0 && (
